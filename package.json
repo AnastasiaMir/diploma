@@ -1,0 +1,14 @@
+{
+  "name": "diploma",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "cd frontend && npx eslint .",
+    "lint:backend": "cd backend && npx eslint ."
+  },
+  "author": "Anastasia Mironova",
+  "license": "ISC",
+  "description": ""
+}
