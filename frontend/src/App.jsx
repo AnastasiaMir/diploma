@@ -25,15 +25,26 @@
 
 // export default App;
 
-
 import React from 'react';
-import TodoList from './TodoList';
+import { Provider } from 'react-redux';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import LoginForm from './components/LoginForm.jsx';
+import Dashboard from './components/Dashboard.jsx';
+import store from './store';
+import RegisterForm from "./components/RegisterForm.jsx";
+
 
 function App() {
   return (
-    <div className="App">
-      <TodoList />
-    </div>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginForm />} />
+            <Route path="/register" element={<RegisterForm/>} />
+            <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   );
 }
 

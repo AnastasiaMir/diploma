@@ -1,24 +1,21 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
 
-
-
 export default [
-  {languageOptions: { globals: globals.browser }},
+  { languageOptions: { globals: globals.browser } },
   {
-    files: ['**/*.js'], // Target all .js files in the backend folder, modify as needed
-     languageOptions: {
-       sourceType: 'module', // Set to 'module' to use es6 syntax
-        globals: {
-          ...globals.node, // add node globals
-          process: true, // Explicitly add process for node
-        },
-    rules: {
-      semi: ['error', 'always'], // Enforce semicolons at the end of statements
-           // other rules
+    files: ['**/*.js'],
+    languageOptions: {
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+        process: true,
       },
     },
+    rules: {
+      semi: ['error', 'always'], // Enforce semicolons
+      indent: ['error', 2], // Enforce 2-space indentation
+    },
   },
-    pluginJs.configs.recommended,  // You can also include this config
+  pluginJs.configs.recommended,
 ];
-

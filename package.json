@@ -4,11 +4,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start-backend": "cd backend && npm run start",
+    "start-frontend": "cd frontend && npm run build && npm run dev",
     "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint-fix": "npm run lint-fix:frontend && npm run lint-fix:backend",
     "lint:frontend": "cd frontend && npx eslint .",
-    "lint:backend": "cd backend && npx eslint ."
+    "lint:backend": "cd backend && npx eslint .",
+    "lint-fix:frontend": "cd frontend && npx eslint --fix .",
+    "lint-fix:backend": "cd backend && npx eslint --fix ."
   },
   "author": "Anastasia Mironova",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.5.0"
+  }
 }
