@@ -16,7 +16,7 @@ api.interceptors.request.use((config) => {
        return Promise.reject(error);
 });
 
-  // Clear the token and redirect to the login page when the request is unauthorized
+
 api.interceptors.response.use(
     (response) => response, // If the response is not an error, return it.
   async (error) => {

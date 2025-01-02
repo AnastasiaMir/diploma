@@ -8,17 +8,20 @@ import subtaskRoutes from './routes/subtasks.js';
 import User from './models/user.js';
 import { Task } from "./models/task.js";
 import { Subtask } from './models/subtask.js';
+import dotenv from 'dotenv'; 
+
+dotenv.config();
 
 const app = express();
 const port = 3000;
-const secret = 'your_secret_key'; 
+const secret = process.env.JWT_SECRET;
 
 User.hasMany(Task, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 Task.belongsTo(User, { foreignKey: 'user_id' });
 Task.hasMany(Subtask, { foreignKey: 'task_id', onDelete: 'CASCADE' });
 Subtask.belongsTo(Task, { foreignKey: 'task_id' });
 
-sequelize.sync({alter: true});
+// sequelize.sync({alter: true});
 
 const allowedOrigin = 'http://localhost:5173';
 app.use(cors({
@@ -47,9 +50,9 @@ const verifyToken = (req, res, next) => {
 
 
 // Routes
-app.use('/users', userRoutes); // Public route for login and registration
-app.use('/tasks', verifyToken, taskRoutes); // Protected route for tasks
-app.use('/subtasks', verifyToken, subtaskRoutes); // Protected route for subtasks
+app.use('/users', userRoutes); 
+app.use('/tasks', verifyToken, taskRoutes); 
+app.use('/subtasks', verifyToken, subtaskRoutes); 
 
 
 // Login endpoint

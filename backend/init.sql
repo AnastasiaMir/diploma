@@ -1,0 +1,25 @@
+CREATE DATABASE db;
+GRANT ALL PRIVILEGES ON DATABASE db TO postgres;
+
+\c db;
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+);
+CREATE TABLE tasks
+(
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY NOT NULL,
+    user_id INTEGER REFERENCES users (id) NOT NULL,
+    name VARCHAR(255),
+	start_date DATE,
+	finish_date DATE
+);
+CREATE TABLE subtasks
+(
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    task_id INTEGER REFERENCES tasks (id) NOT NULL,
+    name VARCHAR(255),
+	manpower INT,
+	completed BOOLEAN  
+);

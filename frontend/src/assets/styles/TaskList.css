@@ -1,0 +1,45 @@
+.task-list-container {
+    width: 100%;
+}
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.task-table th,
+.task-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.subtask-row td{
+    padding-left: 30px;
+}
+.task-table th {
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+.task-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    cursor: pointer;
+}
+.task-name{
+    flex-grow: 1;
+}
+.error-message{
+    color: red;
+}
+.completed {
+    background-color: #d4edda; /* Light green color */
+  }
+.overdue {
+    color: red;
+    font-weight: bold;
+}
+.delete-icon {
+    cursor: pointer;
+    margin-left: 10px;
+}

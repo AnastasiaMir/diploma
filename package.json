@@ -15,8 +15,5 @@
   },
   "author": "Anastasia Mironova",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@reduxjs/toolkit": "^2.5.0"
-  }
+  "description": ""
 }

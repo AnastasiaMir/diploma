@@ -1,0 +1,41 @@
+.task-details-container {
+    display: flex;
+    padding: 20px;
+}
+.subtasks-container{
+     width: 100%;
+}
+
+.subtasks-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+}
+
+.subtasks-table th,
+.subtasks-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.subtasks-table th {
+    background-color: #f2f2f2;
+}
+
+.success-message {
+    color: green;
+    margin-top: 10px;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.close-button {
+    margin-top: 20px;
+}
+.upload-section {
+    margin-top: 20px;
+}

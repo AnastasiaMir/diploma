@@ -5,12 +5,11 @@ export const Subtask = sequelize.define('subtasks', {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-    // generatedAlwaysAsIdentity: true, does not work with sqlite
   },
   task_id: {
     type: Sequelize.INTEGER,
     references: {
-      model: 'tasks', // Can be a string representing the table name
+      model: 'tasks',
       key: 'id',
     }
   },

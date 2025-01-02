@@ -1,0 +1,29 @@
+.task-upload-container h2 {
+    margin-bottom: 20px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.input-container  input {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ddd;
+     border-radius: 4px;
+}
+
+.task-upload-container button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.task-upload-container button:hover {
+  background-color: #0056b3;
+}

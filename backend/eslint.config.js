@@ -13,8 +13,8 @@ export default [
       },
     },
     rules: {
-      semi: ['error', 'always'], // Enforce semicolons
-      indent: ['error', 2], // Enforce 2-space indentation
+      semi: ['error', 'always'],
+      indent: ['error', 2], 
     },
   },
   pluginJs.configs.recommended,

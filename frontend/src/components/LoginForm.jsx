@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 
-function LoginForm() {
+const LoginForm =() => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();

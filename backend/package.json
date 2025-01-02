@@ -2,6 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
     "lint": "eslint .",
@@ -20,8 +21,7 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.1",
-    "sequelize": "^6.37.5",
-    "sequelize-cli": "^6.6.2"
+    "sequelize": "^6.37.5"
   },
   "devDependencies": {
     "@eslint/create-config": "^1.0.0",
@@ -34,7 +34,8 @@
     "eslint-plugin-react": "^7.37.3",
     "eslint-plugin-react-hooks": "^4.6.2",
     "globals": "^15.14.0",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "sequelize-cli": "^6.6.2"
   },
   "nodemonConfig": {
     "watch": [
