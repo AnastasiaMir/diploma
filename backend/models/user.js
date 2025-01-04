@@ -1,42 +1,24 @@
-import { Sequelize } from 'sequelize';
+// models/user.js
+import { DataTypes } from 'sequelize';
 import sequelize from '../db-conn.js';
-import bcrypt from 'bcrypt';
-const saltRounds = 10;
 
-
-const User = sequelize.define('users', {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  username: {
-    type: Sequelize.TEXT,
-    unique: true,
-    allowNull: false,
-  },
-  password: {
-    type: Sequelize.TEXT,
-    allowNull: false,
-  },
-},
-{
-  timestamps: false,
-  hooks: {
-    beforeCreate: async (user) => {
-      const salt = await bcrypt.genSalt(saltRounds);
-      user.password = await bcrypt.hash(user.password, salt);
+const User = sequelize.define('user', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-    beforeUpdate: async (user) => {
-      if (user.changed('password')){
-        const salt = await bcrypt.genSalt(saltRounds);
-        user.password = await bcrypt.hash(user.password, salt);
-      }
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
     }
-  },
+}, {
+   timestamps: false,  // <--- Add this line to disable timestamps
 });
 
-User.prototype.validPassword = async function(password) {
-  return await bcrypt.compare(password, this.password);
-};
 export default User;

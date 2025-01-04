@@ -1,30 +1,36 @@
-import { Sequelize } from 'sequelize';
+// models/task.js
+import { DataTypes } from 'sequelize';
+import sequelize from '../db-conn.js';
+import User from './user.js';
 
-import  sequelize  from "../db-conn.js";
-export const Task = sequelize.define('tasks', {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  user_id: {
-    type: Sequelize.INTEGER,
-    references: {
-      model: 'users', 
-      key: 'id',
+const Task = sequelize.define('task', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    start_date: {
+        type: DataTypes.DATE,
+        allowNull: false, // <--- Add allowNull: false
+    },
+    finish_date: {
+        type: DataTypes.DATE,
+        allowNull: false, // <--- Add allowNull: false
+    },
+   user_id: {
+          type: DataTypes.INTEGER,
+         allowNull: false,
     }
-  },
-  name: {
-    type: Sequelize.STRING,
-  },
-
-	  start_date: {
-    type: Sequelize.DATE,
-	  },
-	  finish_date: {
-    type: Sequelize.DATE,
-  },
 },
 {
-  timestamps: false,
+    timestamps: false, // <-- отключите timestamps если они вам не нужны.
 });
+
+Task.belongsTo(User, { foreignKey: 'user_id' });
+User.hasMany(Task, { foreignKey: 'user_id' });
+
+export default Task;
