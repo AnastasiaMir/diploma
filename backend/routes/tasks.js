@@ -155,6 +155,28 @@ router.post(
     }
 );
 
+router.get(
+    '/:taskId/subtasks',
+    authenticateToken,
+    async (req, res) => {
+        const { taskId } = req.params;
+
+        try {
+            const task = await Task.findOne({ where: { id: taskId, user_id: req.user.id } });
+             if (!task) {
+                    return res.status(404).json({ message: 'Task not found' });
+                }
+            const subtasks = await Subtask.findAll({
+                where: { task_id: taskId },
+            });
+            res.status(200).json(subtasks);
+        } catch (error) {
+            console.error('Error in GET /tasks/:taskId/subtasks:', error);
+            res.status(500).json({ message: 'Internal server error', error: error.message });
+        }
+    }
+);
+
 router.post('/:taskId/subtasks/bulk',
         authenticateToken,
             async (req, res) => {

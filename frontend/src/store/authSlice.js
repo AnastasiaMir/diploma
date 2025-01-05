@@ -1,15 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../api';
 
+const AUTH_URL = '/api/auth';
 
 export const loginUser = createAsyncThunk(
-  'auth/login',
+  '/api/auth/login',
    async (credentials, { rejectWithValue }) => {
     try {
-        const response = await api.post('/login', credentials);
+        const response = await api.post(`${AUTH_URL}/login`, credentials);
        // Save the token when the login is successful
         localStorage.setItem('token', response.data.token);
-        return response.data;
+        return response.data.token;
      }catch (err) {
        return rejectWithValue(err.response?.data?.message || 'Login error');
      }
@@ -17,10 +18,10 @@ export const loginUser = createAsyncThunk(
 );
 
 export const registerUser = createAsyncThunk(
-    'auth/register',
+    '/api/auth/register',
       async(userData, { rejectWithValue }) => {
            try {
-              const response = await api.post('/users/register', userData);
+              const response = await api.post(`${AUTH_URL}/register`, userData);
                return response.data;
             }catch(err){
                 return rejectWithValue(err.response?.data?.message || 'Registration error');
@@ -32,7 +33,6 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     token: localStorage.getItem('token') || null,
-    isAuthenticated: !!localStorage.getItem('token'),
     error: null,
       loading: false,
      user: null,
@@ -41,8 +41,10 @@ const authSlice = createSlice({
     logout: (state) => {
       localStorage.removeItem('token');
       state.token = null;
-      state.isAuthenticated = false;
     },
+       clearError: (state) => {
+            state.error = null;
+        }
   },
    extraReducers: (builder) => {
     builder
@@ -52,14 +54,11 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
           state.loading = false;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-          // In a real app, you would decode the JWT and extract user data
+        state.token = action.payload;
       })
       .addCase(loginUser.rejected, (state, action) => {
          state.loading = false;
            state.error = action.payload;
-           state.isAuthenticated = false;
           state.token = null;
       })
       .addCase(registerUser.pending, (state) => {
@@ -68,7 +67,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
            state.loading = false;
-          state.error = null
+          state.user = action.payload;
       })
       .addCase(registerUser.rejected, (state, action) => {
            state.loading = false;
@@ -77,5 +76,5 @@ const authSlice = createSlice({
   }
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, clearError } = authSlice.actions;
 export default authSlice.reducer;

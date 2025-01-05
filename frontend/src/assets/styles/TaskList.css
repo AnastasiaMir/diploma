@@ -1,45 +1,55 @@
 .task-list-container {
-    width: 100%;
+    padding: 20px;
 }
+
 .task-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.task-table th,
-.task-table td {
+.task-table th, .task-table td {
+    padding: 10px;
     border: 1px solid #ddd;
-    padding: 8px;
     text-align: left;
 }
-.subtask-row td{
-    padding-left: 30px;
-}
-.task-table th {
-    background-color: #f2f2f2;
-    cursor: pointer;
+.task-table th{
+    background-color: #f0f0f0;
+    font-weight: bold;
 }
 .task-row {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
     cursor: pointer;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
 }
-.task-name{
-    flex-grow: 1;
+.task-row:hover {
+  background-color: #e0e0e0;
 }
-.error-message{
-    color: red;
+.task-name {
+    margin-left: 10px;
+}
+.subtask-row {
+   background-color: #f9f9f9;
 }
 .completed {
-    background-color: #d4edda; /* Light green color */
-  }
-.overdue {
-    color: red;
-    font-weight: bold;
+  text-decoration: line-through;
+    background-color: #e6ffe6; /* Light green for completed tasks */
 }
 .delete-icon {
+    color: #e74c3c;
     cursor: pointer;
-    margin-left: 10px;
+  margin-left: 10px;
+}
+.edit-icon {
+    color: #3498db;
+    cursor: pointer;
+    margin-left: 5px;
+}
+.overdue {
+    color: #e74c3c;
+  font-weight: bold;
 }

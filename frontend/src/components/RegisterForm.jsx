@@ -8,22 +8,24 @@ function RegisterForm() {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-   const { error, loading } = useSelector((state) => state.auth)
+  const { error, loading } = useSelector((state) => state.auth);
 
   const handleRegister = async (e) => {
     e.preventDefault();
-        dispatch(registerUser({ username: username, password: password }))
-        .then((result) => {
-            if (result.type === 'auth/register/fulfilled'){
-               navigate('/login'); // Redirect to login page after registration
-            }
-        })
+    try {
+        const resultAction = await dispatch(registerUser({ username: username, password: password }));
+        if (registerUser.fulfilled.match(resultAction)) {
+            navigate('/login'); // Redirect to login page after registration
+        }
+    } catch (err) {
+          console.error('Error during registration', err);
+    }
   };
 
   return (
       <form onSubmit={handleRegister}>
           {error && <p style={{ color: 'red' }}>{error}</p>}
-          {loading ? 'Loading' : null}
+          {loading ? 'Loading...' : null}
           <div>
               <label>Username:</label>
               <input
@@ -42,7 +44,9 @@ function RegisterForm() {
                   required
               />
           </div>
-          <button type="submit">Register</button>
+            <button type="submit" disabled={loading}>
+              Register
+          </button>
       </form>
   );
 }

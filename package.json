@@ -15,5 +15,9 @@
   },
   "author": "Anastasia Mironova",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  }
 }

@@ -36,12 +36,12 @@ const TaskDetails =({ task }) => {
                 const date = new Date(subtask.finish_date);
                 return max ? (date > max ? date : max) : date;
             }, null);
-              setAggregatedData({
+             setAggregatedData({
                     totalManpower,
                     earliestStartDate,
                     latestFinishDate,
                 });
-               setTaskWithTotal(prevState => ({...prevState, totalManpower: totalManpower}))
+              setTaskWithTotal(prevState => ({...prevState, totalManpower: totalManpower}))
         } else {
              setAggregatedData({
                     totalManpower: 0,
@@ -86,48 +86,64 @@ const TaskDetails =({ task }) => {
         }
     };
 
-    const handleUpdateSubtask = async (subtask, completed) => {
-        dispatch(updateSubtask({ id: subtask.id, updatedSubtask: { ...subtask, completed: completed } }));
+     const handleUpdateSubtask = async (subtask, completed) => {
+        dispatch(updateSubtask({ taskId: task.id, id: subtask.id, updatedSubtask: { ...subtask, completed: completed } }));
     };
 
     const handleDeleteSubtask = (id) => {
-        dispatch(deleteSubtask(id));
+        dispatch(deleteSubtask({ taskId: task.id, id: id }));
     };
 
-    return (
+
+  return (
         <div className="subtasks-container">
                {error && <p className='error-message'>Error: {error}</p>}
            {loading && <p>Loading</p>}
-                  <table className="subtasks-table">
-                     <thead>
-                     <tr>
-                     <th>Наименование подзадачи</th>
-                     <th>сумма нормочасов</th>
-                        </tr>
-                    </thead>
-                     <tbody>
-                     {subtasks.map((subtask) => (
-                          <tr key={subtask.id}>
-                             <td>{subtask.name}</td>
-                               <td>{subtask.manpower}</td>
-                            </tr>
+                <table className="subtasks-table">
+                   <thead>
+                   <tr>
+                        <th>Наименование подзадачи</th>
+                       <th>сумма нормочасов</th>
+                       <th>ВЫПОЛНЕНО</th>
+                        <th></th>
+                     </tr>
+                  </thead>
+                   <tbody>
+                       {subtasks.map((subtask) => (
+                        <tr key={subtask.id}>
+                           <td>{subtask.name}</td>
+                            <td>{subtask.manpower}</td>
+                            <td>
+                             {" "}
+                               <input
+                                  type="checkbox"
+                                  checked={subtask.completed}
+                                   onChange={() =>
+                                      handleUpdateSubtask(subtask, !subtask.completed)
+                                  }
+                              />
+                          </td>
+                         <td>
+                           <button onClick={() => handleDeleteSubtask(subtask.id)} className='delete-icon'>Удалить</button>
+                         </td>
+                         </tr>
                          ))}
-                     </tbody>
-                 </table>
-             <div className="upload-section">
-                 <h3>Upload subtasks from excel</h3>
-                 <div>
-                     <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} disabled={isLoading} />
-                     <button onClick={handleUpload} disabled={isLoading}>
-                         {isLoading ? 'Uploading...' : 'Upload Subtasks'}
+                    </tbody>
+                </table>
+            <div className="upload-section">
+                <h3>Upload subtasks from excel</h3>
+                <div>
+                   <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} disabled={isLoading} />
+                    <button onClick={handleUpload} disabled={isLoading}>
+                        {isLoading ? 'Uploading...' : 'Upload Subtasks'}
                      </button>
-                     {uploadStatus && (
-                           <div className={uploadStatus.type === 'success' ? 'success-message' : 'error-message'}>
-                               {uploadStatus.message}
-                           </div>
-                      )}
-                  </div>
-              </div>
+                   {uploadStatus && (
+                         <div className={uploadStatus.type === 'success' ? 'success-message' : 'error-message'}>
+                             {uploadStatus.message}
+                         </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }

@@ -1,18 +1,11 @@
-export default () => {
-  
+import React from 'react';
+const NotFoundPage = () => {
     return (
-
-      <div className="text-center">
-      <img
-        className="img-fluid h-25"
-        alt="notFoundPage"
-        src={image}
-      />
-      <h1 className="h4 text-muted">Страница не найдена</h1>
-      <p className="text-muted">
-      Но вы можете перейти на
-        <a href="/"> главную страницу</a>
-      </p>
-    </div>
+        <div>
+             <h1>404</h1>
+            <p>Page not found</p>
+        </div>
     );
-  };
+};
+
+export default NotFoundPage;

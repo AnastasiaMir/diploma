@@ -1,60 +1,73 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import * as XLSX from 'xlsx';
-import { createSubtask } from "../store/subtaskSlice";
-import '../assets/styles/TaskUpload.css';
+import api from '../api';
 
-function TaskUpload({ task, onTaskUploaded }) {
-    const [file, setFile] = useState(null);
-    const dispatch = useDispatch();
+const TaskUpload = ({ taskId }) => {
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadStatus, setUploadStatus] = useState(null);
 
 
-   const handleFileChange = (e) => {
-         const selectedFile = e.target.files[0];
-       setFile(selectedFile);
-      };
-
-     const handleUpload = async () => {
-        if (!file || !task) {
-            alert('Выберите una tarea y un archivo');
-             return;
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+          setUploadStatus(null);
+     };
+    const handleUpload = async () => {
+        if (!selectedFile) {
+            setUploadStatus({ message: 'No file selected', success: false });
+           return;
         }
-        try {
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                const sheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[sheetName];
-                const jsonData = XLSX.utils.sheet_to_json(worksheet);
-                 for (const row of jsonData) {
-                     const newSubtask = {
-                        name: row['Наименование задачи'] || '',
-                        manpower: row['Трудоемкость'] || 0,
-                        task_id: task.id,
-                        completed: false
-                    };
-                      await dispatch(createSubtask(newSubtask));
-                }
-                alert('Подзадачи успешно загружены!');
-                setFile(null)
-                onTaskUploaded();
-            };
-              reader.readAsArrayBuffer(file);
-        } catch (error) {
-           console.error("Error", error);
-            alert("Error ");
-        }
+
+       try {
+             const workbook = await handleExcelFile(selectedFile)
+             const subtasks = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
+                 const transformedSubtasks = subtasks.map((subtask) => ({
+                     name: subtask['Наименование задачи'],
+                   manpower: Number(subtask['Трудоемкость']),
+                 completed: false
+              }));
+               for(const subtask of transformedSubtasks) {
+                   await api.post(`/api/tasks/${taskId}/subtasks`, subtask)
+              }
+            setUploadStatus({ message: 'Subtasks uploaded successfully', success: true });
+         } catch (error) {
+          console.error('Error uploading subtasks:', error);
+            setUploadStatus({ message: 'Error uploading subtasks', success: false });
+      }
     };
-     return (
-        <div className="task-upload-container">
-            <h2>Загрузить подзадачи</h2>
-            <div className="input-container">
-                 <input type="file" onChange={handleFileChange} accept=".xlsx,.xls" />
-            </div>
-            <button onClick={handleUpload}>Загрузить</button>
+      const handleExcelFile = async (file) => {
+          return  new Promise((resolve, reject) => {
+               const reader = new FileReader();
+                reader.onload = (e) => {
+                  try {
+                      const binaryString = e.target.result;
+                      const workbook = XLSX.read(binaryString, { type: 'binary' });
+                        resolve(workbook);
+                      } catch(error) {
+                        reject(error);
+                   }
+              };
+              reader.onerror = (error) => {
+                   reject(error);
+              };
+                reader.readAsBinaryString(file);
+          })
+
+      }
+
+    return (
+        <div>
+            <label>
+                Upload Excel file:
+                <input type="file" accept=".xls,.xlsx" onChange={handleFileChange} />
+            </label>
+            <button onClick={handleUpload}>Upload Subtasks</button>
+             {uploadStatus && (
+              <div style={{ color: uploadStatus.success ? 'green' : 'red' }}>
+                   {uploadStatus.message}
+               </div>
+           )}
         </div>
     );
-}
+};
 
 export default TaskUpload;

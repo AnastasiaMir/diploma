@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:3000'; // Замените на правильный адрес бэкенда
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -18,14 +18,15 @@ api.interceptors.request.use((config) => {
 
 
 api.interceptors.response.use(
-    (response) => response, // If the response is not an error, return it.
+    (response) => response,
   async (error) => {
        const originalRequest = error.config;
      if (error.response?.status === 401 || error.response?.status === 403 ) {
        localStorage.removeItem('token');
-       window.location.href = "/login" // Re-direct to login page
+       throw new Error('Unauthorized')
      }
      return Promise.reject(error);
 });
+
 
 export default api;

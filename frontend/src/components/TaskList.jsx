@@ -1,12 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTasks, deleteTask, updateTask } from '../store/taskSlice';
 import '../assets/styles/TaskList.css';
-import { selectTasksWithTotalManpower, selectTasksLoading, selectTasksError } from '../store/taskSelectors';
-import {fetchSubtasks, updateSubtask} from "../store/subtaskSlice";
+import {
+    selectTasksWithTotalManpower,
+    selectTasksLoading,
+    selectTasksError,
+} from '../store/taskSelectors';
+import { fetchSubtasks, updateSubtask } from '../store/subtaskSlice';
 import { selectSubtasksByTaskId } from '../store/subtaskSelectors';
 import { FaTrash, FaEdit } from 'react-icons/fa';
-
+import TaskDetails from './TaskDetails';
 
 function TaskList() {
     const dispatch = useDispatch();
@@ -14,82 +18,111 @@ function TaskList() {
     const loading = useSelector(selectTasksLoading);
     const error = useSelector(selectTasksError);
     const [expandedTaskId, setExpandedTaskId] = useState(null);
-    const [selectedTask, setSelectedTask] = useState(null)
-    const subtasks = useSelector((state) => selectSubtasksByTaskId(state, selectedTask?.id));
+    const [selectedTask, setSelectedTask] = useState(null);
     const [editTaskId, setEditTaskId] = useState(null);
     const [editTask, setEditTask] = useState(null);
     const editInputRef = useRef(null);
-
+    const subtasks = useSelector((state) =>
+      selectSubtasksByTaskId(state, selectedTask?.id)
+    );
 
     useEffect(() => {
         dispatch(fetchTasks());
     }, [dispatch]);
+
     useEffect(() => {
-        if (selectedTask && selectedTask.id) {
-          console.log("fetchSubtasks, task_id: ", selectedTask.id);
-          dispatch(fetchSubtasks(selectedTask.id));
+      if (selectedTask && selectedTask.id) {
+            dispatch(fetchSubtasks(selectedTask.id));
         }
     }, [dispatch, selectedTask]);
-     useEffect(() => {
+
+    useEffect(() => {
         if (editTaskId && editInputRef.current) {
-           editInputRef.current.focus();
+            editInputRef.current.focus();
         }
-     }, [editTaskId]);
+    }, [editTaskId]);
+    
+      const tasksWithTotalManpower = useMemo(() => {
+        if (!tasks) return [];
+          return tasks.map(task => {
+               const taskSubtasks = subtasks ? subtasks.filter(subtask => subtask.task_id === task.id) : [];
+                const totalManpower = taskSubtasks.reduce((acc, subtask) => acc + (subtask.manpower || 0), 0);
+                return { ...task, totalManpower };
+        });
+       }, [tasks, subtasks]);
+
+
 
     const toggleSubtasks = (taskId) => {
-        setExpandedTaskId(prevId => prevId === taskId ? null : taskId);
-      };
+        setExpandedTaskId((prevId) => (prevId === taskId ? null : taskId));
+    };
+
     const formatDate = (date) => {
-      if (!date) return 'N/A';
-       return new Date(date).toLocaleDateString();
-        };
-       const calculateDaysLeft = (finishDate) => {
+        if (!date) return 'N/A';
+        return new Date(date).toLocaleDateString();
+    };
+
+    const calculateDaysLeft = (finishDate) => {
         if (!finishDate) return 'N/A';
         const finish = new Date(finishDate);
         const now = new Date();
         const diffInTime = finish.getTime() - now.getTime();
         const diffInDays = Math.ceil(diffInTime / (1000 * 3600 * 24));
-        if(diffInDays < 0){
-            return <span className="overdue">0</span>
+        if (diffInDays < 0) {
+            return <span className="overdue">0</span>;
         }
         return diffInDays;
-      };
-    const handleSelectTask = (task) => {
-     setSelectedTask(task)
-    }
-     const handleUpdateSubtask = async (subtask, completed) => {
-        dispatch(updateSubtask({ id: subtask.id, updatedSubtask: { ...subtask, completed: completed } }));
     };
-      const handleUpdateTask = async (task, completed) => {
-        dispatch(updateTask({ id: task.id, updatedTask: { ...task, completed: completed } }));
+      const handleSelectTask = (task) => {
+           setSelectedTask(task);
+        };
+    const handleUpdateSubtask = async (subtask, completed) => {
+     dispatch(
+        updateSubtask({
+              taskId: selectedTask.id,
+                id: subtask.id,
+                updatedSubtask: { ...subtask, completed: completed },
+           })
+        );
+    };
+    const handleUpdateTask = async (task, completed) => {
+        dispatch(
+            updateTask({
+                id: task.id,
+                updatedTask: { ...task, completed: completed },
+            })
+        );
     };
 
     const handleDeleteTask = (id) => {
-         dispatch(deleteTask(id));
-    }
-    const handleEditClick = (task) => {
-         setEditTaskId(task.id);
-        setEditTask({ ...task });
-      };
-    const handleEditTaskChange = (e) => {
-          const { name, value } = e.target;
-           setEditTask(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-      };
-
-     const handleSaveTask = async (task) => {
-          await dispatch(updateTask({ id: task.id, updatedTask: editTask }));
-          setEditTaskId(null);
+        dispatch(deleteTask(id));
     };
-     const handleCancelEdit = () => {
+
+    const handleEditClick = (task) => {
+        setEditTaskId(task.id);
+        setEditTask({ ...task });
+    };
+
+    const handleEditTaskChange = (e) => {
+        const { name, value } = e.target;
+        setEditTask((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const handleSaveTask = async (task) => {
+        await dispatch(updateTask({ id: task.id, updatedTask: editTask }));
+        setEditTaskId(null);
+    };
+
+    const handleCancelEdit = () => {
         setEditTaskId(null);
     };
 
     return (
         <div className="task-list-container">
-            {error && <p className='error-message'>Error: {error}</p>}
+            {error && <p className="error-message">Error: {error}</p>}
             {loading && <p>Loading</p>}
             <table className="task-table">
                 <thead>
@@ -104,94 +137,113 @@ function TaskList() {
                     </tr>
                 </thead>
                 <tbody>
-                    {tasks.map((task) => (
+                    {tasksWithTotalManpower.map((task) => (
                         <React.Fragment key={task.id}>
-                            <tr  className={`${task.completed ? 'completed' : ''}`}>
-                                  <td>
-                                  {editTaskId === task.id ? (
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                ref={editInputRef}
-                                                value={editTask.name}
-                                                onChange={handleEditTaskChange}
-                                            />
-                                        ) : (
-                                        <div className="task-row" onClick={() => {
-                                              toggleSubtasks(task.id);
-                                              handleSelectTask(task)
-                                           }
-                                        }>
-                                                <span className="task-name">
-                                                     <strong>{task.name}</strong>
-                                                </span>
-                                            </div>
-                                    )}
-
-                                </td>
+                            <tr className={`${task.completed ? 'completed' : ''}`}>
                                 <td>
-                                  {editTaskId === task.id ? (
-                                           <input
-                                             type="date"
-                                             name="start_date"
-                                              value={editTask.start_date ? editTask.start_date.split("T")[0] : ""}
-                                              onChange={handleEditTaskChange}
-                                           />
-                                         ) : (
-                                        formatDate(task.start_date)
-                                     )}
-                                </td>
-                                <td>
-                                      {editTaskId === task.id ? (
-                                           <input
-                                             type="date"
-                                             name="finish_date"
-                                             value={editTask.finish_date ? editTask.finish_date.split("T")[0] : ""}
+                                    {editTaskId === task.id ? (
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            ref={editInputRef}
+                                            value={editTask.name}
                                             onChange={handleEditTaskChange}
-                                            />
-                                         ) : (
-                                         formatDate(task.finish_date)
-                                        )}
+                                        />
+                                    ) : (
+                                        <div
+                                            className="task-row"
+                                            onClick={() => {
+                                                toggleSubtasks(task.id);
+                                                handleSelectTask(task);
+                                            }}
+                                        >
+                                            <span className="task-name">
+                                                <strong>{task.name}</strong>
+                                            </span>
+                                        </div>
+                                    )}
                                 </td>
                                 <td>
-                                      {task.totalManpower}
+                                    {editTaskId === task.id ? (
+                                        <input
+                                            type="date"
+                                            name="start_date"
+                                            value={
+                                                editTask.start_date
+                                                    ? editTask.start_date.split('T')[0]
+                                                    : ''
+                                            }
+                                            onChange={handleEditTaskChange}
+                                        />
+                                    ) : (
+                                        formatDate(task.start_date)
+                                    )}
                                 </td>
-                                <td >{calculateDaysLeft(task.finish_date)}</td>
-                                 <td> <input
+                                <td>
+                                    {editTaskId === task.id ? (
+                                        <input
+                                            type="date"
+                                            name="finish_date"
+                                            value={
+                                                editTask.finish_date
+                                                    ? editTask.finish_date.split('T')[0]
+                                                    : ''
+                                            }
+                                            onChange={handleEditTaskChange}
+                                        />
+                                    ) : (
+                                        formatDate(task.finish_date)
+                                    )}
+                                </td>
+                                <td>{task.totalManpower}</td>
+                                <td>{calculateDaysLeft(task.finish_date)}</td>
+                                <td>
+                                    {' '}
+                                    <input
                                         type="checkbox"
                                         checked={task.completed}
                                         onChange={() => handleUpdateTask(task, !task.completed)}
-                                    /></td>
-                                    <td>
+                                    />
+                                </td>
+                                <td>
                                     {editTaskId === task.id ? (
-                                         <>
-                                           <button onClick={() => handleSaveTask(task)}>Guardar</button>
-                                             <button onClick={handleCancelEdit}>Cancelar</button>
-                                         </>
-                                     ) : (
-                                      <>
-                                       <FaEdit className='edit-icon' onClick={() => handleEditClick(task)} />
-                                        <FaTrash className='delete-icon' onClick={() => handleDeleteTask(task.id)} />
-                                     </>
-                                      )}
-                                    </td>
+                                        <>
+                                            <button onClick={() => handleSaveTask(task)}>
+                                                Изменить
+                                            </button>
+                                            <button onClick={handleCancelEdit}>Отмена</button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FaEdit
+                                                className="edit-icon"
+                                                onClick={() => handleEditClick(task)}
+                                            />
+                                            <FaTrash
+                                                className="delete-icon"
+                                                onClick={() => handleDeleteTask(task.id)}
+                                            />
+                                        </>
+                                    )}
+                                </td>
                             </tr>
-                            {expandedTaskId === task.id &&
-                                subtasks?.map((subtask) => (
-                                        <tr key={subtask.id} className={`subtask-row ${subtask.completed ? 'completed' : ''}`}>
-                                          <td>{subtask.name}</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>{subtask.manpower}</td>
-                                            <td></td>
-                                          <td> <input
-                                                type="checkbox"
-                                                checked={subtask.completed}
-                                                onChange={() => handleUpdateSubtask(subtask, !subtask.completed)}
-                                            /></td>
-                                        </tr>
-                                ))
-                            }
+                           {expandedTaskId === task.id && subtasks && subtasks.map((subtask) => (
+                                    <tr key={subtask.id} className={`subtask-row ${subtask.completed ? 'completed' : ''}`}>
+                                        <td style={{ paddingLeft: '40px' }}>{subtask.name}</td>
+                                          <td></td>
+                                         <td></td>
+                                         <td>{subtask.manpower}</td>
+                                         <td></td>
+                                         <td>
+                                               <input
+                                                   type="checkbox"
+                                                    checked={subtask.completed}
+                                                    onChange={() => handleUpdateSubtask(subtask, !subtask.completed)}
+                                                  />
+                                           </td>
+                                          <td></td>
+                                    </tr>
+                                ))}
                         </React.Fragment>
                     ))}
                 </tbody>
