@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTasks, deleteTask, updateTask } from '../store/taskSlice';
 import '../assets/styles/TaskList.css';
+import '../assets/styles/global.css';
 import {
     selectTasksWithTotalManpower,
     selectTasksLoading,
@@ -10,7 +11,7 @@ import {
 import { fetchSubtasks, updateSubtask } from '../store/subtaskSlice';
 import { selectSubtasksByTaskId } from '../store/subtaskSelectors';
 import { FaTrash, FaEdit } from 'react-icons/fa';
-import TaskDetails from './TaskDetails';
+
 
 function TaskList() {
     const dispatch = useDispatch();
@@ -47,7 +48,7 @@ function TaskList() {
           return tasks.map(task => {
                const taskSubtasks = subtasks ? subtasks.filter(subtask => subtask.task_id === task.id) : [];
                 const totalManpower = taskSubtasks.reduce((acc, subtask) => acc + (subtask.manpower || 0), 0);
-                return { ...task, totalManpower };
+                return { ...task, totalManpower: task.totalManpower || totalManpower };
         });
        }, [tasks, subtasks]);
 

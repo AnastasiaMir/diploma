@@ -17,7 +17,13 @@ router.use((req, res, next) => {
 
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        const tasks = await Task.findAll({ where: { user_id: req.user.id } });
+        const tasks = await Task.findAll({
+           where: { user_id: req.user.id },
+            include: [{
+                model: Subtask,
+                as: 'subtasks',
+            }],
+        });
         res.status(200).json(tasks);
     } catch (error) {
         console.error('Error in GET /tasks:', error);
@@ -53,21 +59,31 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { name, start_date, finish_date } = req.body;
+        const { name, start_date, finish_date, completed } = req.body;
         try {
-            const newTask = await Task.create({
+           const newTask = await Task.create({
                 name,
                 start_date,
                 finish_date,
-                user_id: req.user.id,
+                completed,
+                user_id: req.user.id
             });
-            res.status(201).json(newTask);
+              const createdTask = await Task.findOne({
+                where: { id: newTask.id },
+                include: [{
+                    model: Subtask,
+                   as: 'subtasks'
+                }]
+            });
+            res.status(201).json(createdTask);
         } catch (error) {
             console.error('Error in POST /tasks:', error);
             res.status(500).json({ message: 'Internal server error', error: error.message });
         }
     }
 );
+
+
 
 router.put(
     '/:id',
@@ -84,18 +100,25 @@ router.put(
         }
 
         const { id } = req.params;
-        const { name, start_date, finish_date } = req.body;
+        const { name, start_date, finish_date, completed } = req.body;
         try {
             const task = await Task.findOne({ where: { id, user_id: req.user.id } });
             if (!task) {
                 return res.status(404).json({ message: 'Task not found' });
             }
-
             task.name = name;
             task.start_date = start_date;
             task.finish_date = finish_date;
+             task.completed = completed;
             await task.save();
-            res.status(200).json(task);
+             const updatedTask = await Task.findOne({
+                where: { id: req.params.id, user_id: req.user.id },
+                include: [{
+                  model: Subtask,
+                    as: 'subtasks',
+               }],
+            });
+            res.status(200).json(updatedTask);
         } catch (error) {
             console.error('Error in PUT /tasks/:id:', error);
             res.status(500).json({ message: 'Internal server error', error: error.message });
@@ -154,7 +177,6 @@ router.post(
         }
     }
 );
-
 router.get(
     '/:taskId/subtasks',
     authenticateToken,
@@ -176,6 +198,7 @@ router.get(
         }
     }
 );
+
 
 router.post('/:taskId/subtasks/bulk',
         authenticateToken,

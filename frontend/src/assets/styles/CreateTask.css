@@ -1,0 +1,32 @@
+.create-task-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+      margin-bottom: 20px;
+  }
+  
+  .create-task-container h3 {
+      margin-bottom: 10px;
+    color: #495057;
+  }
+  .create-task-container label {
+      display: block;
+      margin-bottom: 5px;
+       font-weight: bold;
+     color: #495057;
+  }
+  
+  .create-task-container input[type="text"],
+  .create-task-container input[type="date"] {
+    padding: 10px;
+     border: 1px solid #ced4da;
+     border-radius: 6px;
+      font-size: 15px;
+      margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
+  }
+  .error-message {
+    color: red;
+      font-style: italic;
+  }

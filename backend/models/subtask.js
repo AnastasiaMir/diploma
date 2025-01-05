@@ -1,7 +1,5 @@
-// models/subtask.js
 import { DataTypes } from 'sequelize';
 import sequelize from '../db-conn.js';
-import Task from './task.js'
 
 const Subtask = sequelize.define('subtask', {
     id: {
@@ -21,16 +19,13 @@ const Subtask = sequelize.define('subtask', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
     },
-  task_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-  }
+    task_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    }
 },
 {
-    timestamps: false, // <-- отключите timestamps если они вам не нужны.
+    timestamps: false,
 });
-
-Subtask.belongsTo(Task, { foreignKey: 'task_id' });
-Task.hasMany(Subtask, { foreignKey: 'task_id' });
 
 export default Subtask;

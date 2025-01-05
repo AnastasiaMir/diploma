@@ -1,7 +1,7 @@
-// models/task.js
 import { DataTypes } from 'sequelize';
 import sequelize from '../db-conn.js';
 import User from './user.js';
+import Subtask from './subtask.js'
 
 const Task = sequelize.define('task', {
     id: {
@@ -15,22 +15,25 @@ const Task = sequelize.define('task', {
     },
     start_date: {
         type: DataTypes.DATE,
-        allowNull: false, // <--- Add allowNull: false
+        allowNull: false,
     },
     finish_date: {
         type: DataTypes.DATE,
-        allowNull: false, // <--- Add allowNull: false
+        allowNull: false,
     },
-   user_id: {
-          type: DataTypes.INTEGER,
-         allowNull: false,
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     }
 },
 {
-    timestamps: false, // <-- отключите timestamps если они вам не нужны.
+    timestamps: false,
 });
 
 Task.belongsTo(User, { foreignKey: 'user_id' });
 User.hasMany(Task, { foreignKey: 'user_id' });
+
+Task.hasMany(Subtask, { foreignKey: 'task_id', as: 'subtasks', onDelete: 'CASCADE' });
+Subtask.belongsTo(Task, { foreignKey: 'task_id'});
 
 export default Task;

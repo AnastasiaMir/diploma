@@ -29,6 +29,23 @@ router.get('/:id', authenticateToken, async (req, res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, manpower, completed } = req.body;
+
+    try {
+        const subtask = await Subtask.findByPk(id);
+        if (!subtask) {
+            return res.status(404).json({ message: 'Subtask not found' });
+        }
+
+        await subtask.update({ name, manpower, completed });
+        res.json(subtask);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 
 router.delete('/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;

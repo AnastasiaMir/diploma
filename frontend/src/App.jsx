@@ -30,7 +30,7 @@ import LoginForm from './components/LoginForm.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import { useSelector } from 'react-redux';
 import RegisterForm from "./components/RegisterForm.jsx";
-
+import './assets/styles/global.css';
 
 function App() {
     const token = useSelector((state) => state.auth.token);

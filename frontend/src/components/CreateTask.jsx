@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTask } from "../store/taskSlice";
+import '../assets/styles/CreateTask.css';
 
 const CreateTask = () => {
   const [name, setName] = useState('');
@@ -23,23 +24,26 @@ const CreateTask = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="create-task-form">
-         {error && <p style={{ color: 'red' }}>{error}</p>}
-           {loading ? 'Loading...' : null}
-      <div>
-        <label htmlFor="name">Task name:</label>
-        <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required/>
+      <div className="create-task-container">
+           {error && <p className="error-message">{error}</p>}
+            {loading ? 'Loading...' : null}
+          <form onSubmit={handleSubmit}>
+              <div>
+                 <label htmlFor="name">Task name:</label>
+                 <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required/>
+             </div>
+            <div>
+               <label htmlFor="startDate">Start date:</label>
+               <input type="date" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} required/>
+             </div>
+             <div>
+              <label htmlFor="finishDate">Finish date:</label>
+               <input type="date" id="finishDate" value={finishDate} onChange={(e) => setFinishDate(e.target.value)} required/>
+            </div>
+            <button className='btn' type="submit" disabled={loading}>Add task</button>
+          </form>
       </div>
-      <div>
-        <label htmlFor="startDate">Start date:</label>
-        <input type="date" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} required/>
-      </div>
-      <div>
-        <label htmlFor="finishDate">Finish date:</label>
-        <input type="date" id="finishDate" value={finishDate} onChange={(e) => setFinishDate(e.target.value)} required/>
-      </div>
-        <button type="submit" disabled={loading}>Add task</button>
-    </form>
+
   );
 }
 

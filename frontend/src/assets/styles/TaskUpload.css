@@ -1,10 +1,31 @@
 .task-upload-container {
-    margin-top: 10px;
-     padding: 20px;
-  }
-  .task-upload-container h2{
-    margin-bottom: 20px;
-  }
-  .task-upload-container .input-container{
+   display: flex;
+   flex-direction: column;
+   gap: 15px;
      margin-bottom: 20px;
-  }
+ }
+ .task-upload-container label {
+     display: block;
+     margin-bottom: 5px;
+     font-weight: bold;
+      color: #495057;
+     width: 100%;
+      word-break: break-word;
+ }
+ 
+ .task-upload-container input[type="file"] {
+   padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+     font-size: 15px;
+     margin-bottom: 10px;
+     width: 100%;
+     box-sizing: border-box;
+ }
+ 
+ .task-upload-container .upload-status {
+     font-style: italic;
+     margin-top: 10px;
+     font-size: 14px;
+      color: #495057;
+ }

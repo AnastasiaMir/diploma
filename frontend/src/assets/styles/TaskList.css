@@ -1,55 +1,71 @@
 .task-list-container {
-    padding: 20px;
+    width: 100%;
 }
-
 .task-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.task-table th, .task-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
+.task-table th,
+.task-table td {
+    padding: 12px 15px;
+    border: 1px solid #dee2e6;
     text-align: left;
 }
-.task-table th{
-    background-color: #f0f0f0;
+
+.task-table th {
+    background-color: #f8f9fa;
     font-weight: bold;
 }
+.task-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+.task-table tbody tr:hover {
+   background-color: #f0f0f0
+}
+
 .task-row {
-    display: flex;
-    align-items: center;
     cursor: pointer;
-    padding: 5px;
-    border-bottom: 1px solid #eee;
-    transition: background-color 0.2s;
+    padding: 5px 0;
+    display: block;
 }
+
 .task-row:hover {
-  background-color: #e0e0e0;
+    background-color: #e9ecef;
 }
-.task-name {
-    margin-left: 10px;
-}
-.subtask-row {
-   background-color: #f9f9f9;
-}
+
 .completed {
-  text-decoration: line-through;
-    background-color: #e6ffe6; /* Light green for completed tasks */
+    text-decoration: line-through;
+    color: #777;
 }
+
+.edit-icon,
 .delete-icon {
-    color: #e74c3c;
-    cursor: pointer;
-  margin-left: 10px;
-}
-.edit-icon {
-    color: #3498db;
     cursor: pointer;
     margin-left: 5px;
+    font-size: 16px;
+     color: #6c757d;
+      transition: color 0.3s ease;
+}
+
+.edit-icon:hover,
+.delete-icon:hover {
+ color: #343a40;
+}
+.subtask-row {
+    background-color: #f0f0f0;
+     border-left: 10px solid #007bff;
 }
 .overdue {
-    color: #e74c3c;
-  font-weight: bold;
+    color: red;
+     font-weight: bold;
+}
+.error-message {
+  color: red;
+    font-style: italic;
 }
