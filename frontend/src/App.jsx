@@ -28,9 +28,11 @@ import React from 'react';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import LoginForm from './components/LoginForm.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import NotFoundPage from './components/NotFoundPage.jsx';
 import { useSelector } from 'react-redux';
 import RegisterForm from "./components/RegisterForm.jsx";
 import './assets/styles/global.css';
+import NotFound from './components/NotFoundPage.jsx';
 
 function App() {
     const token = useSelector((state) => state.auth.token);
@@ -38,6 +40,7 @@ function App() {
     return (
             <BrowserRouter>
                 <Routes>
+                <Route path="*" element={<NotFoundPage />} />
                   <Route path="/" element={<Navigate to={ token ? "/dashboard" : "/login"}/>}/>
                     <Route path="/login" element={token ? <Navigate to="/dashboard" /> : <LoginForm />} />
                     <Route path="/register" element={token ? <Navigate to="/dashboard"/> :<RegisterForm/>} />

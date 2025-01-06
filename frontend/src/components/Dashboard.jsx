@@ -7,21 +7,25 @@ import TaskList from "./TaskList";
 import '../assets/styles/Dashboard.css';
 import GanttChart from './GanttChart';
 import TaskUpload from "./TaskUpload";
-import { selectTasks } from "../store/taskSelectors";
+import { selectTasksForGantt } from "../store/taskSelectors";
 import { fetchTasks } from '../store/taskSlice';
 
 const Dashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('tasks');
-    const tasks = useSelector(selectTasks);
+      const tasksForGantt = useSelector(selectTasksForGantt);
+    const tasks = useSelector((state) => state.tasks.tasks);
     const [selectedTaskId, setSelectedTaskId] = useState(null);
      const [selectedTask, setSelectedTask] = useState(null);
+     const { token } = useSelector((state) => state.auth);
 
 
     useEffect(() => {
+        if(token) {
         dispatch(fetchTasks());
-    }, [dispatch]);
+      }
+    }, [dispatch, token]);
 
    const handleLogout = () => {
      dispatch(logout());
@@ -37,6 +41,9 @@ const Dashboard = () => {
 
     const handleTaskUploaded = () => {
         dispatch(fetchTasks());
+    }
+       if (!token) {
+        return <p>Please login</p>;
     }
 
     return (
@@ -76,7 +83,7 @@ const Dashboard = () => {
                     </div>
                     <div className="tab-content">
                         {activeTab === 'tasks' && <TaskList selectedTaskId={selectedTaskId} selectedTask={selectedTask} />}
-                        {activeTab === 'gantt' && <GanttChart />}
+                        {activeTab === 'gantt' && <GanttChart tasks={tasksForGantt} />}
                     </div>
                 </div>
             </div>

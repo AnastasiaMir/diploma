@@ -7,16 +7,23 @@ const CreateTask = () => {
   const [name, setName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [finishDate, setFinishDate] = useState('');
+    const [dateError, setDateError] = useState('');
   const dispatch = useDispatch();
     const { loading, error } = useSelector((state) => state.tasks)
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-     try{
-          await dispatch(addTask({ name: name, start_date: startDate, finish_date: finishDate }));
+       if (startDate && finishDate && new Date(startDate) > new Date(finishDate)) {
+         setDateError('Finish date must be after start date');
+          return;
+        }
+    try{
+          await dispatch(addTask({ name: name, start_date: startDate, finish_date: finishDate, completed: false }));
           setName('');
           setStartDate('');
           setFinishDate('');
+        setDateError('');
      }
      catch(err) {
           console.error('Error creating task', err)
@@ -27,6 +34,7 @@ const CreateTask = () => {
       <div className="create-task-container">
            {error && <p className="error-message">{error}</p>}
             {loading ? 'Loading...' : null}
+            {dateError && <p className="error-message">{dateError}</p>}
           <form onSubmit={handleSubmit}>
               <div>
                  <label htmlFor="name">Task name:</label>

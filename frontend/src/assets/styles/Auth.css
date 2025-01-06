@@ -1,0 +1,78 @@
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+}
+
+.auth-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+     gap: 15px;
+}
+
+.auth-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #495057;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 15px;
+    margin-bottom: 10px;
+    width: calc(100% - 22px);
+    box-sizing: border-box;
+}
+
+.auth-form button {
+    padding: 12px 15px;
+     background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+       margin-top: 5px;
+      margin-bottom: 5px;
+}
+
+.auth-form button:hover {
+    background-color: #0056b3;
+}
+
+.auth-form p.error-message {
+    color: red;
+    font-style: italic;
+}
+
+.auth-form .link-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.auth-form .link-container a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.auth-form .link-container a:hover {
+    text-decoration: underline;
+}
