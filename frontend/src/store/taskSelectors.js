@@ -47,8 +47,7 @@ export const selectTasksForGantt = createSelector([selectTasks], (tasks) => {
             name: task.name,
             start: startDate,
             end: endDate,
-            progress: progress,
-        dependencies: [],
+            progress: progress
         };
     });
 });

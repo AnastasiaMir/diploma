@@ -1,4 +1,18 @@
-.gantt-container {
-    width: 100%;
-    overflow-x: auto;
+.gantt-chart-container {
+  width: 100%;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.gantt-chart-svg-wrapper {
+  overflow: hidden;
+  max-width: 100%;
+  width: fit-content;
+}
+
+.gantt-svg {
+  display: block;
+  width: max-content;
+  height: 100%;
 }

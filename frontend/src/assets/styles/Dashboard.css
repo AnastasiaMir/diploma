@@ -1,3 +1,8 @@
+h2.company-name,
+p.company-name {
+  margin: 0;
+  padding: 0;
+}
 .main-container {
   display: flex;
   flex-direction: column;
@@ -6,7 +11,7 @@
 
 .dashboard-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   background-color: #343a40;
@@ -14,13 +19,13 @@
 }
 
 .dashboard-header .logout-button {
-   background-color: transparent;
+  background-color: transparent;
   color: white;
   border: none;
   cursor: pointer;
   font-size: 16px;
   padding: 5px 10px;
-   transition: text-decoration 0.3s ease;
+  transition: text-decoration 0.3s ease;
 }
 .dashboard-header .logout-button:hover {
   text-decoration: underline;
@@ -41,7 +46,15 @@
 
 .dashboard-content {
   flex: 1;
-  padding: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 115px); /* Ограничиваем высоту */
+   overflow: auto; /* Добавляем прокрутку */
+}
+
+.div-company-name {
+  margin: 10px;
 }
 
 .tab-buttons {
@@ -49,14 +62,14 @@
   margin-bottom: 20px;
 }
 .tab-buttons button {
- padding: 10px 15px;
+  padding: 10px 15px;
   cursor: pointer;
   background-color: #e9ecef;
   border-bottom: 2px solid transparent;
   transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
-   border: none;
-    font-size: 16px;
-    margin-right: 5px
+  border: none;
+  font-size: 16px;
+  margin-right: 5px
 }
 .tab-buttons button:hover {
   background-color: #f8f9fa;
@@ -66,29 +79,29 @@
   border-bottom: 2px solid #343a40;
 }
 .select-task-container {
-   margin-top: 20px;
-     display: flex;
+  margin-top: 20px;
+  display: flex;
   flex-direction: column;
-   gap: 10px;
+  gap: 10px;
 }
 .select-task-container label {
-    display: block;
+  display: block;
   margin-bottom: 5px;
   font-weight: bold;
 }
 .select-task-container select {
-    padding: 8px;
- border: 1px solid #ced4da;
- border-radius: 4px;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
   font-size: 14px;
-   width: 100%;
-   box-sizing: border-box;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Common button style */
+
 .btn {
   padding: 12px 15px;
-  background-color: #007bff;
+  background-color: #ca1643;
   color: white;
   border: none;
   cursor: pointer;
@@ -97,8 +110,8 @@
   transition: background-color 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-top: 5px;
-   margin-bottom: 5px;
+  margin-bottom: 5px;
 }
 .btn:hover {
-background-color: #0056b3;
+  background-color: #e64034;
 }

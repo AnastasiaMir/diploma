@@ -49,6 +49,10 @@ const Dashboard = () => {
     return (
         <div className="main-container">
             <div className="dashboard-header">
+                <div className='div-company-name'>
+                <h2 className='company-name'>ООО "ИнтерТех"</h2>
+                <p className='company-name'>Корпоративный портал</p>
+                </div>
                 <button onClick={handleLogout} className='logout-button'>Выход</button>
             </div>
             <div className="dashboard-container">

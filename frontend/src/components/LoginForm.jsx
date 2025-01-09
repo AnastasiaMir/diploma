@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../store/authSlice';
 import { useNavigate, Link } from 'react-router-dom';
-import '../assets/styles/Auth.css'; // Import CSS file
+import '../assets/styles/Auth.css'; 
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');

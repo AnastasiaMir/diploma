@@ -1,33 +1,33 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db-conn.js';
 import User from './user.js';
-import Subtask from './subtask.js'
+import Subtask from './subtask.js';
 
 const Task = sequelize.define('task', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    start_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-    },
-    finish_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    }
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  start_date: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  finish_date: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  }
 },
 {
-    timestamps: false,
+  timestamps: false,
 });
 
 Task.belongsTo(User, { foreignKey: 'user_id' });

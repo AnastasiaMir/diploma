@@ -1,11 +1,10 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000'; // Замените на правильный адрес бэкенда
+const API_BASE_URL = 'http://localhost:3000'; 
 
 const api = axios.create({
     baseURL: API_BASE_URL,
 });
-  // Attach the token before every request
 api.interceptors.request.use((config) => {
       const token = localStorage.getItem('token');
        if(token){
