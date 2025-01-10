@@ -10,10 +10,10 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin: 2px;
 }
-.task-list-container {
+.ac-list-container {
     width: 100%;
 }
-.task-table {
+.ac-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
@@ -23,31 +23,31 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.task-table th,
-.task-table td {
+.ac-table th,
+.ac-table td {
     padding: 12px 15px;
     border: 1px solid #dee2e6;
     text-align: left;
 }
 
-.task-table th {
+.ac-table th {
     background-color: #f8f9fa;
     font-weight: bold;
 }
-.task-table tbody tr:nth-child(odd) {
+.ac-table tbody tr:nth-child(odd) {
     background-color: #f9f9f9;
 }
-.task-table tbody tr:hover {
+.ac-table tbody tr:hover {
    background-color: #f0f0f0
 }
 
-.task-row {
+.ac-row {
     cursor: pointer;
     padding: 5px 0;
     display: block;
 }
 
-.task-row:hover {
+.ac-row:hover {
     background-color: #e9ecef;
 }
 th:hover {
@@ -73,9 +73,9 @@ th:hover {
 .delete-icon:hover {
  color: #343a40;
 }
-.subtask-row {
+.task-row {
     background-color: #f0f0f0;
-     border-left: 10px solid #007bff;
+    border-left: 10px solid #ca1643;
 }
 .overdue {
     color: red;

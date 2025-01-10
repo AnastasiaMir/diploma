@@ -4,14 +4,14 @@ import Task from '../models/task.js';
 
 const router = express.Router();
 
-// Middleware для логирования всех запросов
-router.use((req, res, next) => {
-  console.log('Request:', req.method, req.url, req.body);
-  res.on('finish', () => {
-    console.log('Response:', res.statusCode, res.statusMessage);
-  });
-  next();
-});
+// // Middleware для логирования всех запросов
+// router.use((req, res, next) => {
+//   console.log('Request:', req.method, req.url, req.body);
+//   res.on('finish', () => {
+//     console.log('Response:', res.statusCode, res.statusMessage);
+//   });
+//   next();
+// });
 
 router.get('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;

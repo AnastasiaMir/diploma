@@ -19,7 +19,7 @@ const TaskUpload = ({ aircraftId }) => {
 
     const handleUpload = async () => {
         if (!selectedFile) {
-            setUploadStatus({ message: 'No file selected', success: false });
+            setUploadStatus({ message: 'Файл не выбран', success: false });
             return;
         }
 
@@ -34,7 +34,7 @@ const TaskUpload = ({ aircraftId }) => {
              for(const task of transformedTasks) {
                await  api.post(`/api/aircrafts/${aircraftId}/tasks`, task)
             }
-            setUploadStatus({ message: 'tasks uploaded successfully', success: true });
+            setUploadStatus({ message: 'Работы добавлены', success: true });
              dispatch(fetchAircrafts());
              if (fileInputRef.current) {
                 fileInputRef.current.value = '';
@@ -42,7 +42,7 @@ const TaskUpload = ({ aircraftId }) => {
              }
         } catch (error) {
             console.error('Error uploading tasks:', error);
-            setUploadStatus({ message: 'Error uploading tasks', success: false });
+            setUploadStatus({ message: 'Ошибка загрузки задач', success: false });
         }
     };
 

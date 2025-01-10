@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAircrafts, deleteAircraft, updateAircraft } from '../store/aircraftSlice';
-import '../assets/styles/TaskList.css';
+import '../assets/styles/AircraftList.css';
 import {
   selectAircraftsWithTotalManpower,
   selectAircraftsLoading,
@@ -11,7 +11,7 @@ import { fetchTasks, updateTask } from '../store/taskSlice';
 import { selectTasksByAircraftId } from '../store/taskSelectors';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 
-function TaskList() {
+const AircraftList = () => {
   const dispatch = useDispatch();
   const aircrafts = useSelector(selectAircraftsWithTotalManpower);
   const loading = useSelector(selectAircraftsLoading);
@@ -143,10 +143,10 @@ function TaskList() {
     };
 
   return (
-    <div className="task-list-container">
+    <div className="ac-list-container">
       {error && <p className="error-message">Error: {error}</p>}
       {loading && <p>Loading</p>}
-      <table className="task-table">
+      <table className="ac-table">
         <thead>
           <tr>
             <th onClick={() => requestSort('name')}>Бортовой номер ВС</th>
@@ -173,13 +173,13 @@ function TaskList() {
                                         />
                                     ) : (
                                         <div
-                                            className="task-row"
+                                            className="ac-row"
                                             onClick={() => {
                                                 toggleTasks(ac.id);
                                                 handleSelectAircraft(ac);
                                             }}
                                         >
-                                            <span className="task-name">
+                                            <span className="ac-name">
                                                 <strong>{ac.name}</strong>
                                             </span>
                                         </div>
@@ -245,7 +245,7 @@ function TaskList() {
                                 </td>
               </tr>
                {expandedAircraftId === ac.id && tasks && tasks.map((task) => (
-                                    <tr key={task.id} className={`subtask-row ${task.completed ? 'completed' : ''}`}>
+                                    <tr key={task.id} className={`task-row ${task.completed ? 'completed' : ''}`}>
                                         <td style={{ paddingLeft: '40px' }}>{task.name}</td>
                                           <td></td>
                                          <td></td>
@@ -269,4 +269,4 @@ function TaskList() {
   );
 }
 
-export default TaskList;
+export default AircraftList;

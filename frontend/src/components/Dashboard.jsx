@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import CreateAircraft from "./CreateAircraft";
-import TaskList from "./TaskList";
+import AircraftList from "./AircraftList";
 import '../assets/styles/Dashboard.css';
 import GanttChart from './GanttChart';
 import TaskUpload from "./TaskUpload";
@@ -86,7 +86,7 @@ const Dashboard = () => {
                         </button>
                     </div>
                     <div className="tab-content">
-                        {activeTab === 'aircrafts' && <TaskList selectedAircraftId={selectedAircraftId} selectedAircraft={selectedAircraft} />}
+                        {activeTab === 'aircrafts' && <AircraftList selectedAircraftId={selectedAircraftId} selectedAircraft={selectedAircraft}/>}
                         {activeTab === 'gantt' && <GanttChart aircrafts={aircraftsForGantt} />}
                     </div>
                 </div>
