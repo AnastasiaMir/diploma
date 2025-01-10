@@ -1,18 +1,33 @@
 .gantt-chart-container {
-  width: 100%;
-  position: relative;
-  overflow-x: auto;
-  overflow-y: auto;
+  display: flex;
+  overflow: hidden;
+}
+
+.aircraft-labels-container {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+.aircraft-name-item {
+  padding: 5px 10px;
+  position: absolute;
+  left: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #666;
 }
 
 .gantt-chart-svg-wrapper {
-  overflow: hidden;
-  max-width: 100%;
-  width: fit-content;
+ flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .gantt-svg {
   display: block;
-  width: max-content;
-  height: 100%;
 }
