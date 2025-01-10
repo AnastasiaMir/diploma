@@ -2,10 +2,10 @@ import React, { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import api from '../api';
 import { useDispatch } from 'react-redux';
-import { fetchTasks } from '../store/taskSlice';
+import { fetchAircrafts } from '../store/aircraftSlice';
 import '../assets/styles/TaskUpload.css';
 
-const TaskUpload = ({ taskId }) => {
+const TaskUpload = ({ aircraftId }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState(null);
     const dispatch = useDispatch();
@@ -25,24 +25,24 @@ const TaskUpload = ({ taskId }) => {
 
         try {
             const workbook = await handleExcelFile(selectedFile);
-            const subtasks = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-            const transformedSubtasks = subtasks.map((subtask) => ({
-                name: subtask['Наименование задачи'],
-                manpower: Number(subtask['Трудоемкость']),
+            const tasks = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+            const transformedTasks = tasks.map((task) => ({
+                name: task['Наименование работ'],
+                manpower: Number(task['Трудоемкость']),
                 completed: false
             }));
-             for(const subtask of transformedSubtasks) {
-               await  api.post(`/api/tasks/${taskId}/subtasks`, subtask)
+             for(const task of transformedTasks) {
+               await  api.post(`/api/aircrafts/${aircraftId}/tasks`, task)
             }
-            setUploadStatus({ message: 'Subtasks uploaded successfully', success: true });
-             dispatch(fetchTasks());
+            setUploadStatus({ message: 'tasks uploaded successfully', success: true });
+             dispatch(fetchAircrafts());
              if (fileInputRef.current) {
                 fileInputRef.current.value = '';
                 setSelectedFile(null);
              }
         } catch (error) {
-            console.error('Error uploading subtasks:', error);
-            setUploadStatus({ message: 'Error uploading subtasks', success: false });
+            console.error('Error uploading tasks:', error);
+            setUploadStatus({ message: 'Error uploading tasks', success: false });
         }
     };
 
@@ -68,10 +68,10 @@ const TaskUpload = ({ taskId }) => {
     return (
         <div className="task-upload-container">
             <label>
-                Upload Excel file:
+                Загрузить заявку в формате Excel:
                 <input type="file" accept=".xls,.xlsx" onChange={handleFileChange} ref={fileInputRef} />
             </label>
-            <button className='btn' onClick={handleUpload}>Upload Subtasks</button>
+            <button className='btn' onClick={handleUpload}>Загрузить работы</button>
             {uploadStatus && (
                 <div className="upload-status" style={{ color: uploadStatus.success ? 'green' : 'red' }}>
                     {uploadStatus.message}

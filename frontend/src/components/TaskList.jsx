@@ -1,58 +1,57 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTasks, deleteTask, updateTask } from '../store/taskSlice';
+import { fetchAircrafts, deleteAircraft, updateAircraft } from '../store/aircraftSlice';
 import '../assets/styles/TaskList.css';
 import {
-  selectTasksWithTotalManpower,
-  selectTasksLoading,
-  selectTasksError,
-} from '../store/taskSelectors';
-import { fetchSubtasks, updateSubtask } from '../store/subtaskSlice';
-import { selectSubtasksByTaskId } from '../store/subtaskSelectors';
+  selectAircraftsWithTotalManpower,
+  selectAircraftsLoading,
+  selectAircraftsError,
+} from '../store/aircraftSelectors';
+import { fetchTasks, updateTask } from '../store/taskSlice';
+import { selectTasksByAircraftId } from '../store/taskSelectors';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 
 function TaskList() {
   const dispatch = useDispatch();
-  const tasks = useSelector(selectTasksWithTotalManpower);
-  const loading = useSelector(selectTasksLoading);
-  const error = useSelector(selectTasksError);
-  const [expandedTaskId, setExpandedTaskId] = useState(null);
-  const [selectedTask, setSelectedTask] = useState(null);
-  const [editTaskId, setEditTaskId] = useState(null);
-    const [editTask, setEditTask] = useState(null);
+  const aircrafts = useSelector(selectAircraftsWithTotalManpower);
+  const loading = useSelector(selectAircraftsLoading);
+  const error = useSelector(selectAircraftsError);
+  const [expandedAircraftId, setExpandedAircraftId] = useState(null);
+  const [selectedAircraft, setSelectedAircraft] = useState(null);
+  const [editAircraftId, setEditAircraftId] = useState(null);
+    const [editAircraft, setEditAircraft] = useState(null);
     const editInputRef = useRef(null);
-     const subtasks = useSelector((state) =>
-      selectSubtasksByTaskId(state, selectedTask?.id)
+     const tasks = useSelector((state) =>
+      selectTasksByAircraftId(state, selectedAircraft?.id)
     );
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: null }); // State для сортировки
-
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: null }); 
   useEffect(() => {
-    dispatch(fetchTasks());
+    dispatch(fetchAircrafts());
   }, [dispatch]);
 
   useEffect(() => {
-        if (selectedTask && selectedTask.id) {
-            dispatch(fetchSubtasks(selectedTask.id));
+        if (selectedAircraft && selectedAircraft.id) {
+            dispatch(fetchTasks(selectedAircraft.id));
         }
-    }, [dispatch, selectedTask]);
+    }, [dispatch, selectedAircraft]);
 
     useEffect(() => {
-        if (editTaskId && editInputRef.current) {
+        if (editAircraftId && editInputRef.current) {
             editInputRef.current.focus();
         }
-    }, [editTaskId]);
+    }, [editAircraftId]);
 
-    const tasksWithTotalManpower = useMemo(() => {
-        if (!tasks) return [];
-        return tasks.map(task => {
-           const taskSubtasks = subtasks ? subtasks.filter(subtask => subtask.task_id === task.id) : [];
-            const totalManpower = taskSubtasks.reduce((acc, subtask) => acc + (subtask.manpower || 0), 0);
-            return { ...task, totalManpower: task.totalManpower || totalManpower };
+    const aircraftsWithTotalManpower = useMemo(() => {
+        if (!aircrafts) return [];
+        return aircrafts.map(aircraft => {
+           const aircraftTasks = tasks ? tasks.filter(task => task.aircraft_id === aircraft.id) : [];
+            const totalManpower = aircraftTasks.reduce((acc, task) => acc + (task.manpower || 0), 0);
+            return { ...aircraft, totalManpower: aircraft.totalManpower || totalManpower };
         });
-    }, [tasks, subtasks]);
+    }, [aircrafts, tasks]);
 
-  const toggleSubtasks = (taskId) => {
-    setExpandedTaskId((prevId) => (prevId === taskId ? null : taskId));
+  const toggleTasks = (aircraftId) => {
+    setExpandedAircraftId((prevId) => (prevId === aircraftId ? null : aircraftId));
   };
 
   const formatDate = (date) => {
@@ -72,49 +71,49 @@ function TaskList() {
     return diffInDays;
   };
 
-    const handleSelectTask = (task) => {
-           setSelectedTask(task);
+    const handleSelectAircraft = (aircraft) => {
+           setSelectedAircraft(aircraft);
         };
-    const handleUpdateSubtask = async (subtask, completed) => {
+    const handleUpdateTask = async (task, completed) => {
      dispatch(
-        updateSubtask({
-              taskId: selectedTask.id,
-                id: subtask.id,
-                updatedSubtask: { ...subtask, completed: completed },
+        updateTask({
+              aircraftId: selectedAircraft.id,
+                id: task.id,
+                updatedTask: { ...task, completed: completed },
            })
         );
     };
 
-    const handleDeleteTask = (id) => {
-    dispatch(deleteTask(id));
+    const handleDeleteAircraft = (id) => {
+    dispatch(deleteAircraft(id));
   };
 
 
-   const handleEditClick = (task) => {
-        setEditTaskId(task.id);
-        setEditTask({ ...task });
+   const handleEditClick = (aircraft) => {
+        setEditAircraftId(aircraft.id);
+        setEditAircraft({ ...aircraft });
     };
 
-    const handleEditTaskChange = (e) => {
+    const handleEditAircraftChange = (e) => {
         const { name, value } = e.target;
-        setEditTask((prevState) => ({
+        setEditAircraft((prevState) => ({
             ...prevState,
             [name]: value,
         }));
     };
-    const handleSaveTask = async (task) => {
-        await dispatch(updateTask({ id: task.id, updatedTask: editTask }));
-        setEditTaskId(null);
+    const handleSaveAircraft = async (aircraft) => {
+        await dispatch(updateAircraft({ id: aircraft.id, updatedAircraft: editAircraft }));
+        setEditAircraftId(null);
     };
 
     const handleCancelEdit = () => {
-        setEditTaskId(null);
+        setEditAircraftId(null);
     };
 
-    const sortedTasks = useMemo(() => {
-    if (!tasksWithTotalManpower) return [];
-    const sortableTasks = [...tasksWithTotalManpower];
-    sortableTasks.sort((a, b) => {
+    const sortedAircrafts = useMemo(() => {
+    if (!aircraftsWithTotalManpower) return [];
+    const sortableAircrafts = [...aircraftsWithTotalManpower];
+    sortableAircrafts.sort((a, b) => {
       const { key, direction } = sortConfig;
       const multiplier = direction === 'ascending' ? 1 : -1;
 
@@ -131,8 +130,8 @@ function TaskList() {
       }
       return 0;
     });
-    return sortableTasks;
-  }, [tasksWithTotalManpower, sortConfig]);
+    return sortableAircrafts;
+  }, [aircraftsWithTotalManpower, sortConfig]);
 
 
     const requestSort = (key) => {
@@ -150,113 +149,113 @@ function TaskList() {
       <table className="task-table">
         <thead>
           <tr>
-            <th onClick={() => requestSort('name')}>Наименование задачи</th>
-            <th onClick={() => requestSort('start_date')}>Начало</th>
-            <th onClick={() => requestSort('finish_date')}>Конец</th>
-              <th onClick={() => requestSort('totalManpower')}>Сумма нормочасов</th>
+            <th onClick={() => requestSort('name')}>Бортовой номер ВС</th>
+            <th onClick={() => requestSort('start_date')}>Дата начала работ</th>
+            <th onClick={() => requestSort('finish_date')}>Дата окончания работ</th>
+              <th onClick={() => requestSort('totalManpower')}>Трудоемкость</th>
             <th>Осталось дней</th>
-            <th onClick={() => requestSort('is_completed')}>ВЫПОЛНЕНО</th>
+            <th onClick={() => requestSort('is_completed')}>Выполнено</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {sortedTasks.map((task) => (
-            <React.Fragment key={task.id}>
-              <tr className={`${task.completed ? 'completed' : ''}`}>
+          {sortedAircrafts.map((ac) => (
+            <React.Fragment key={ac.id}>
+              <tr className={`${ac.completed ? 'completed' : ''}`}>
                 <td>
-                    {editTaskId === task.id ? (
+                    {editAircraftId === ac.id ? (
                                         <input
                                             type="text"
                                             name="name"
                                             ref={editInputRef}
-                                            value={editTask.name}
-                                            onChange={handleEditTaskChange}
+                                            value={editAircraft.name}
+                                            onChange={handleEditAircraftChange}
                                         />
                                     ) : (
                                         <div
                                             className="task-row"
                                             onClick={() => {
-                                                toggleSubtasks(task.id);
-                                                handleSelectTask(task);
+                                                toggleTasks(ac.id);
+                                                handleSelectAircraft(ac);
                                             }}
                                         >
                                             <span className="task-name">
-                                                <strong>{task.name}</strong>
+                                                <strong>{ac.name}</strong>
                                             </span>
                                         </div>
                                     )}
                 </td>
                 <td>
-                    {editTaskId === task.id ? (
+                    {editAircraftId === ac.id ? (
                                         <input
                                             type="date"
                                             name="start_date"
                                             value={
-                                                editTask.start_date
-                                                    ? editTask.start_date.split('T')[0]
+                                                editAircraft.start_date
+                                                    ? editAircraft.start_date.split('T')[0]
                                                     : ''
                                             }
-                                            onChange={handleEditTaskChange}
+                                            onChange={handleEditAircraftChange}
                                         />
                                     ) : (
-                                        formatDate(task.start_date)
+                                        formatDate(ac.start_date)
                                     )}
                 </td>
                 <td>
-                    {editTaskId === task.id ? (
+                    {editAircraftId === ac.id ? (
                                         <input
                                             type="date"
                                             name="finish_date"
                                             value={
-                                                editTask.finish_date
-                                                    ? editTask.finish_date.split('T')[0]
+                                                editAircraft.finish_date
+                                                    ? editAircraft.finish_date.split('T')[0]
                                                     : ''
                                             }
-                                            onChange={handleEditTaskChange}
+                                            onChange={handleEditAircraftChange}
                                         />
                                     ) : (
-                                        formatDate(task.finish_date)
+                                        formatDate(ac.finish_date)
                                     )}
                 </td>
-                <td>{task.totalManpower}</td>
-                <td>{calculateDaysLeft(task.finish_date)}</td>
+                <td>{ac.totalManpower}</td>
+                <td>{calculateDaysLeft(ac.finish_date)}</td>
                 <td>
                   
                 </td>
-                  <td>
-                                    {editTaskId === task.id ? (
+                  <td className="completed">
+                                    {editAircraftId === ac.id ? (
                                         <>
-                                            <button onClick={() => handleSaveTask(task)}>
+                                            <button className='btn-change' onClick={() => handleSaveAircraft(ac)}>
                                                 Изменить
                                             </button>
-                                            <button onClick={handleCancelEdit}>Отмена</button>
+                                            <button className='btn-change' onClick={handleCancelEdit}>Отмена</button>
                                         </>
                                     ) : (
                                         <>
                                             <FaEdit
                                                 className="edit-icon"
-                                                onClick={() => handleEditClick(task)}
+                                                onClick={() => handleEditClick(ac)}
                                             />
                                             <FaTrash
                                                 className="delete-icon"
-                                                onClick={() => handleDeleteTask(task.id)}
+                                                onClick={() => handleDeleteAircraft(ac.id)}
                                             />
                                         </>
                                     )}
                                 </td>
               </tr>
-               {expandedTaskId === task.id && subtasks && subtasks.map((subtask) => (
-                                    <tr key={subtask.id} className={`subtask-row ${subtask.completed ? 'completed' : ''}`}>
-                                        <td style={{ paddingLeft: '40px' }}>{subtask.name}</td>
+               {expandedAircraftId === ac.id && tasks && tasks.map((task) => (
+                                    <tr key={task.id} className={`subtask-row ${task.completed ? 'completed' : ''}`}>
+                                        <td style={{ paddingLeft: '40px' }}>{task.name}</td>
                                           <td></td>
                                          <td></td>
-                                         <td>{subtask.manpower}</td>
+                                         <td>{task.manpower}</td>
                                          <td></td>
                                          <td>
                                                <input
                                                    type="checkbox"
-                                                    checked={subtask.completed}
-                                                    onChange={() => handleUpdateSubtask(subtask, !subtask.completed)}
+                                                    checked={task.completed}
+                                                    onChange={() => handleUpdateTask(task, !task.completed)}
                                                   />
                                            </td>
                                           <td></td>

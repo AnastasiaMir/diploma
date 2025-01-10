@@ -1,58 +1,58 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTask } from "../store/taskSlice";
-import '../assets/styles/CreateTask.css';
+import { addAircraft } from "../store/aircraftSlice";
+import '../assets/styles/CreateAircraft.css';
 
-const CreateTask = () => {
+const CreateAircraft = () => {
   const [name, setName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [finishDate, setFinishDate] = useState('');
     const [dateError, setDateError] = useState('');
   const dispatch = useDispatch();
-    const { loading, error } = useSelector((state) => state.tasks)
+    const { loading, error } = useSelector((state) => state.aircrafts)
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
        if (startDate && finishDate && new Date(startDate) > new Date(finishDate)) {
-         setDateError('Finish date must be after start date');
+         setDateError('Дата окончания не может быть раньше даты начала');
           return;
         }
     try{
-          await dispatch(addTask({ name: name, start_date: startDate, finish_date: finishDate, completed: false }));
+          await dispatch(addAircraft({ name: name, start_date: startDate, finish_date: finishDate, completed: false }));
           setName('');
           setStartDate('');
           setFinishDate('');
         setDateError('');
      }
      catch(err) {
-          console.error('Error creating task', err)
+          console.error('Error creating aircraft', err)
       }
   };
 
   return (
-      <div className="create-task-container">
+      <div className="create-ac-container">
            {error && <p className="error-message">{error}</p>}
             {loading ? 'Loading...' : null}
             {dateError && <p className="error-message">{dateError}</p>}
           <form onSubmit={handleSubmit}>
               <div>
-                 <label htmlFor="name">Task name:</label>
+                 <label htmlFor="name">Бортовой номер ВС:</label>
                  <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required/>
              </div>
             <div>
-               <label htmlFor="startDate">Start date:</label>
+               <label htmlFor="startDate">Дата начала:</label>
                <input type="date" id="startDate" value={startDate} onChange={(e) => setStartDate(e.target.value)} required/>
              </div>
              <div>
-              <label htmlFor="finishDate">Finish date:</label>
+              <label htmlFor="finishDate">Дата окончания:</label>
                <input type="date" id="finishDate" value={finishDate} onChange={(e) => setFinishDate(e.target.value)} required/>
             </div>
-            <button className='btn' type="submit" disabled={loading}>Add task</button>
+            <button className='btn' type="submit" disabled={loading}>Добавить</button>
           </form>
       </div>
 
   );
 }
 
-export default CreateTask;
+export default CreateAircraft;

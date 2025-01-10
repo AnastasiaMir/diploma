@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
+import aircraftReducer from './aircraftSlice';
 import taskReducer from './taskSlice';
-import subtaskReducer from './subtaskSlice';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    aircrafts: aircraftReducer,
     tasks: taskReducer,
-    subtasks: subtaskReducer,
   },
 });
 

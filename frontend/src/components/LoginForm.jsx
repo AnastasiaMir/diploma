@@ -18,13 +18,13 @@ const LoginForm = () => {
      const validateForm = () => {
          let isValid = true;
        if (!username.trim()) {
-            setUsernameError('Username is required');
+            setUsernameError('Введите имя пользователя');
             isValid = false;
         } else {
            setUsernameError('');
         }
          if (!password.trim()) {
-            setPasswordError('Password is required');
+            setPasswordError('Введите пароль');
             isValid = false;
         } else {
            setPasswordError('');
@@ -47,9 +47,9 @@ const LoginForm = () => {
     const getErrorMessage = () => {
        if (error) {
             if (error.includes('User not found')) {
-                 return "This username does not exist. Please check your username or register.";
+                 return "Данное имя пользователя не существует. Пожалуйста введите корректное имя или зарегистрируйтесь";
             } else if (error.includes('Incorrect password')) {
-                return "Incorrect password. Please try again.";
+                return "Пароль неверный. Пожалуйста введите корректный пароль";
             } else {
                  return error
             }
@@ -64,7 +64,7 @@ const LoginForm = () => {
             <h2>Login</h2>
              {error && <p className="error-message">{getErrorMessage()}</p>}
             <div>
-                <label>Username:</label>
+                <label>Имя пользователя:</label>
                 <input
                     type="text"
                    value={username}
@@ -74,7 +74,7 @@ const LoginForm = () => {
                  {usernameError && <p className="error-message">{usernameError}</p>}
             </div>
             <div>
-                <label>Password:</label>
+                <label>Пароль:</label>
                 <input
                     type="password"
                      value={password}
@@ -88,8 +88,8 @@ const LoginForm = () => {
             </button>
              <div className="link-container">
                 <p>
-                     Don't have an account?
-                 <Link to="/register">Register</Link>
+                     У Вас нет аккаунта?
+                 <Link to="/register">Зарегистрироваться</Link>
                   </p>
             </div>
         </form>

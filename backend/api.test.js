@@ -2,7 +2,7 @@ import request from 'supertest';
 import app from './index.js';
 
 let authToken;
-let taskId;
+let aircraftId;
 
 
 describe('Auth API', () => {
@@ -23,110 +23,109 @@ describe('Auth API', () => {
   });
 });
 
-describe('Task API', () => {
-  it('should return tasks for authenticated user', async () => {
+describe('Aircraft API', () => {
+  it('should return aircrafts for authenticated user', async () => {
     const response = await request(app)
-      .get('/api/tasks')
+      .get('/api/aircrafts')
       .set('Authorization', `Bearer ${authToken}`);
     expect(response.statusCode).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
   });
 
-  it('should create a new task', async () => {
+  it('should create a new aircraft', async () => {
     const response = await request(app)
-      .post('/api/tasks')
+      .post('/api/aircrafts')
       .set('Authorization', `Bearer ${authToken}`)
-      .send({ name: 'Test Task', start_date: '2024-12-10', finish_date: '2024-12-20' });
+      .send({ name: 'Test Aircraft', start_date: '2024-12-10', finish_date: '2024-12-20' });
     expect(response.statusCode).toBe(201);
     expect(response.body).toHaveProperty('id');
-    taskId = response.body.id;
+    aircraftId = response.body.id;
   });
 
-  it('should return a specific task', async () => {
+  it('should return a specific Aircraft', async () => {
     const response = await request(app)
-      .get(`/api/tasks/${taskId}`)
+      .get(`/api/aircrafts/${aircraftId}`)
       .set('Authorization', `Bearer ${authToken}`);
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('id');
   });
 
-  it('should update a task', async () => {
+  it('should update an aircraft', async () => {
     const response = await request(app)
-      .put(`/api/tasks/${taskId}`)
+      .put(`/api/aircrafts/${aircraftId}`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send({ name: 'Updated Task', start_date: '2024-12-15', finish_date: '2024-12-25' });
+      .send({ name: 'Updated Aircraft', start_date: '2024-12-15', finish_date: '2024-12-25' });
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('id');
-    expect(response.body.name).toBe('Updated Task');
+    expect(response.body.name).toBe('Updated Aircraft');
   });
 
-  it('should delete a task', async () => {
+  it('should delete an Aircraft', async () => {
     const response = await request(app)
-      .delete(`/api/tasks/${taskId}`)
+      .delete(`/api/aircrafts/${aircraftId}`)
       .set('Authorization', `Bearer ${authToken}`);
     expect(response.statusCode).toBe(204);
   });
 
-  it('should not find deleted task', async () => {
+  it('should not find deleted Aircraft', async () => {
     const response = await request(app)
-      .get(`/api/tasks/${taskId}`)
+      .get(`/api/aircrafts/${aircraftId}`)
       .set('Authorization', `Bearer ${authToken}`);
     expect(response.statusCode).toBe(404);
   });
 });
 
-describe('Subtask API', () => {
-  let taskId;
+describe('Task API', () => {
 
   beforeAll(async () => {
-    const taskResponse = await request(app)
-      .post('/api/tasks')
+    const aircraftResponse = await request(app)
+      .post('/api/aircrafts')
       .set('Authorization', `Bearer ${authToken}`)
-      .send({ name: 'Test Task', start_date: '2024-12-10', finish_date: '2024-12-20' });
-    expect(taskResponse.statusCode).toBe(201);
-    expect(taskResponse.body).toHaveProperty('id');
-    taskId = taskResponse.body.id;
+      .send({ name: 'Test Aircraft', start_date: '2024-12-10', finish_date: '2024-12-20' });
+    expect(aircraftResponse.statusCode).toBe(201);
+    expect(aircraftResponse.body).toHaveProperty('id');
+    aircraftId = aircraftResponse.body.id;
   });
 
-  it('should create a new subtask', async () => {
+  it('should create a new task', async () => {
     const response = await request(app)
-      .post(`/api/tasks/${taskId}/subtasks`)
+      .post(`/api/aircrafts/${aircraftId}/tasks`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send({ name: 'Test Subtask', manpower: 1, completed: false });
+      .send({ name: 'Test task', manpower: 1, completed: false });
     expect(response.statusCode).toBe(201);
     expect(response.body).toHaveProperty('id');
-    console.log("subtaskId после создания subtask:", JSON.stringify(response.body.id));
+    console.log("taskId после создания task:", JSON.stringify(response.body.id));
   });
 
-  it('should delete a subtask', async () => {
-    const subtaskResponse = await request(app)
-      .post(`/api/tasks/${taskId}/subtasks`)
+  it('should delete a task', async () => {
+    const taskResponse = await request(app)
+      .post(`/api/aircrafts/${aircraftId}/tasks`)
       .set('Authorization', `Bearer ${authToken}`)
       .send({ name: 'Test Subtask', manpower: 1, completed: false });
-    expect(subtaskResponse.statusCode).toBe(201);
-    const deleteSubtaskId = subtaskResponse.body.id;
-    console.log("subtaskId перед удалением subtask:", JSON.stringify(deleteSubtaskId));
+    expect(taskResponse.statusCode).toBe(201);
+    const deleteTaskId = taskResponse.body.id;
+    console.log("taskId перед удалением task:", JSON.stringify(deleteTaskId));
     const response = await request(app)
-      .delete(`/api/subtasks/${deleteSubtaskId}`)
+      .delete(`/api/tasks/${deleteTaskId}`)
       .set('Authorization', `Bearer ${authToken}`);
     expect(response.statusCode).toBe(204);
   });
 
-  it('should not find deleted subtask', async () => {
-    const subtaskResponse = await request(app)
-      .post(`/api/tasks/${taskId}/subtasks`)
+  it('should not find deleted task', async () => {
+    const taskResponse = await request(app)
+      .post(`/api/aircrafts/${aircraftId}/tasks`)
       .set('Authorization', `Bearer ${authToken}`)
-      .send({ name: 'Test Subtask', manpower: 1, completed: false });
-    expect(subtaskResponse.statusCode).toBe(201);
-    const newSubtaskId = subtaskResponse.body.id;
-    console.log("subtaskId перед получением subtask:", JSON.stringify(newSubtaskId));
+      .send({ name: 'Test task', manpower: 1, completed: false });
+    expect(taskResponse.statusCode).toBe(201);
+    const newTaskId = taskResponse.body.id;
+    console.log("taskId перед получением task:", JSON.stringify(newTaskId));
     const deleteResponse = await request(app)
-      .delete(`/api/subtasks/${newSubtaskId}`)
+      .delete(`/api/tasks/${newTaskId}`)
       .set('Authorization', `Bearer ${authToken}`);
     expect(deleteResponse.statusCode).toBe(204);
     const response = await request(app)
-      .get(`/api/subtasks/${newSubtaskId}`)
+      .get(`/api/tasks/${newTaskId}`)
       .set('Authorization', `Bearer ${authToken}`);
     expect(response.statusCode).toBe(404);
   });

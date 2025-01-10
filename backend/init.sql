@@ -7,19 +7,21 @@ CREATE TABLE users (
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
 );
+CREATE TABLE aircrafts
+(
+      id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY NOT NULL,
+	user_id INTEGER REFERENCES users (id) NOT NULL,
+      name VARCHAR(255),
+
+	  start_date DATE,
+	  finish_date DATE
+);
 CREATE TABLE tasks
 (
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY NOT NULL,
-    user_id INTEGER REFERENCES users (id) NOT NULL,
-    name VARCHAR(255),
-	start_date DATE,
-	finish_date DATE
+      id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+	aircraft_id INTEGER REFERENCES aircrafts (id) NOT NULL,
+      name VARCHAR(255),
+	  manpower INT,
+	  completed BOOLEAN  
 );
-CREATE TABLE subtasks
-(
-    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    task_id INTEGER REFERENCES tasks (id) NOT NULL,
-    name VARCHAR(255),
-	manpower INT,
-	completed BOOLEAN  
-);
+

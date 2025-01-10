@@ -1,33 +1,33 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import '../assets/styles/GanttChart.css';
 
-const GanttChart = ({ tasks }) => {
+const GanttChart = ({ aircrafts }) => {
     const svgRef = useRef(null);
     const [containerWidth, setContainerWidth] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
     const ganttChartContainerRef = useRef(null);
 
     const drawChart = useCallback(() => {
-        if (!svgRef.current || !tasks || tasks.length === 0) return;
+        if (!svgRef.current || !aircrafts || aircrafts.length === 0) return;
 
         const svg = svgRef.current;
         svg.innerHTML = '';
         const container = svg.parentElement;
         const availableWidth = container.offsetWidth;
         setContainerWidth(availableWidth);
-        const taskHeight = 30;
-        const taskMargin = 10;
+        const aircraftHeight = 30;
+        const aircraftMargin = 10;
         const dateHeaderHeight = 60;
 
         // Находим минимальную и максимальную даты на основе всех задач
-        let minDate = tasks.length > 0 ? new Date(tasks[0].start) : new Date();
-        let maxDate = tasks.length > 0 ? new Date(tasks[0].end) : new Date();
+        let minDate = aircrafts.length > 0 ? new Date(aircrafts[0].start) : new Date();
+        let maxDate = aircrafts.length > 0 ? new Date(aircrafts[0].end) : new Date();
 
-       tasks.forEach(task => {
-           const taskStart = new Date(task.start);
-           const taskEnd = new Date(task.end);
-           minDate = taskStart < minDate ? taskStart : minDate;
-            maxDate = taskEnd > maxDate ? taskEnd : maxDate;
+        aircrafts.forEach(ac => {
+           const acStart = new Date(ac.start);
+           const acEnd = new Date(ac.end);
+           minDate = acStart < minDate ? acStart : minDate;
+            maxDate = acEnd > maxDate ? acEnd : maxDate;
         });
 
 
@@ -83,49 +83,49 @@ const GanttChart = ({ tasks }) => {
 
 
 
-        tasks.forEach((task, index) => {
-            const start = new Date(task.start);
-            const end = new Date(task.end);
+        aircrafts.forEach((ac, index) => {
+            const start = new Date(ac.start);
+            const end = new Date(ac.end);
 
-            const taskStartDays = Math.floor((start - minDate) / (1000 * 60 * 60 * 24));
-            const taskDurationDays = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+            const aircraftStartDays = Math.floor((start - minDate) / (1000 * 60 * 60 * 24));
+            const aircraftDurationDays = Math.floor((end - start) / (1000 * 60 * 60 * 24));
 
 
-            const startX = taskStartDays * oneDayWidth;
-            const width = taskDurationDays * oneDayWidth;
-            const y = index * (taskHeight + taskMargin) + dateHeaderHeight;
+            const startX = aircraftStartDays * oneDayWidth;
+            const width = aircraftDurationDays * oneDayWidth;
+            const y = index * (aircraftHeight + aircraftMargin) + dateHeaderHeight;
             
            // Проверяем, находится ли конец задачи за пределами левой границы графика
            if (startX + width < 0) return;
 
 
-            const taskBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          taskBar.setAttribute('x', startX);
-            taskBar.setAttribute('y', y);
-          taskBar.setAttribute('width', width);
-           taskBar.setAttribute('height', taskHeight);
-            taskBar.setAttribute('fill', 'rgba(202, 22, 67, 0.8)');
-            taskBar.setAttribute('rx', 5);
-            svg.appendChild(taskBar);
+            const aircraftBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            aircraftBar.setAttribute('x', startX);
+            aircraftBar.setAttribute('y', y);
+            aircraftBar.setAttribute('width', width);
+            aircraftBar.setAttribute('height', aircraftHeight);
+            aircraftBar.setAttribute('fill', 'rgba(202, 22, 67, 0.8)');
+            aircraftBar.setAttribute('rx', 5);
+            svg.appendChild(aircraftBar);
 
 
-            const progressWidth = (task.progress / 100) * width;
+            const progressWidth = (ac.progress / 100) * width;
            const progressBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
            progressBar.setAttribute('x', startX);
            progressBar.setAttribute('y', y);
            progressBar.setAttribute('width', progressWidth);
-            progressBar.setAttribute('height', taskHeight);
+            progressBar.setAttribute('height', aircraftHeight);
           progressBar.setAttribute('fill', 'rgba(0, 0, 0, 0.2)');
             progressBar.setAttribute('rx', 5);
             svg.appendChild(progressBar);
 
-            const taskName = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            taskName.textContent = task.name;
-          taskName.setAttribute('x', startX + 5);
-           taskName.setAttribute('y', y + taskHeight / 2 + 5);
-            taskName.setAttribute('font-size', '12px');
-            taskName.setAttribute('fill', '#fff');
-            svg.appendChild(taskName);
+            const aircraftName = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            aircraftName.textContent = ac.name;
+            aircraftName.setAttribute('x', startX + 5);
+            aircraftName.setAttribute('y', y + aircraftHeight / 2 + 5);
+            aircraftName.setAttribute('font-size', '12px');
+            aircraftName.setAttribute('fill', '#fff');
+            svg.appendChild(aircraftName);
         });
 
          if (todayX !== null) {
@@ -139,8 +139,8 @@ const GanttChart = ({ tasks }) => {
         }
 
         svg.setAttribute('width', totalDays * oneDayWidth + 20);
-        svg.setAttribute('height', tasks.length * (taskHeight + taskMargin) + dateHeaderHeight + 20);
-    }, [tasks]);
+        svg.setAttribute('height', aircrafts.length * (aircraftHeight + aircraftMargin) + dateHeaderHeight + 20);
+    }, [aircrafts]);
 
     const handleScroll = useCallback((event) => {
         setScrollLeft(event.target.scrollLeft);
@@ -148,7 +148,7 @@ const GanttChart = ({ tasks }) => {
 
     useEffect(() => {
         drawChart();
-    }, [tasks, drawChart]);
+    }, [aircrafts, drawChart]);
   useEffect(() => {
         if (svgRef.current) {
             svgRef.current.parentElement.style.width = `calc(100% + 20px)`;

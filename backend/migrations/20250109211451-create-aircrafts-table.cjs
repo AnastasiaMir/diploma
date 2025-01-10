@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('tasks', {
+        await queryInterface.createTable('aircrafts', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -28,20 +28,20 @@ module.exports = {
                 type: Sequelize.DATE
             }
         });
-      await queryInterface.addConstraint('tasks', {
-          fields: ['user_id'],
-          type: 'foreign key',
-          name: 'tasks_user_id_fkey',
-           references: {
-              table: 'users',
-              field: 'id'
-          },
-            onDelete: 'CASCADE',
-              onUpdate: 'CASCADE'
-      })
+      // await queryInterface.addConstraint('aircrafts', {
+      //     fields: ['user_id'],
+      //     type: 'foreign key',
+      //     name: 'aircrafts_user_id_fkey',
+      //      references: {
+      //         table: 'users',
+      //         field: 'id'
+      //     },
+      //       onDelete: 'CASCADE',
+      //         onUpdate: 'CASCADE'
+      // })
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.removeConstraint('tasks', 'tasks_user_id_fkey')
-        await queryInterface.dropTable('tasks');
+        await queryInterface.dropTable('aircrafts');
+        await queryInterface.removeConstraint('aircrafts', 'aircrafts_user_id_fkey')
     }
 };

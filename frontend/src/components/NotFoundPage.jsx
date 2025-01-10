@@ -7,8 +7,8 @@ const NotFoundPage = () => {
         <div className="not-found-container">
             <div>
                 <h1>404</h1>
-                <p>Oops! The page you're looking for doesn't exist.</p>
-                <Link to="/">Go Back Home</Link>
+                <p>Oй! Данной страницы не существует!</p>
+                <Link to="/">На главную</Link>
             </div>
         </div>
     );

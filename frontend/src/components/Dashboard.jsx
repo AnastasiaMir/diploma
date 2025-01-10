@@ -2,28 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
-import CreateTask from "./CreateTask";
+import CreateAircraft from "./CreateAircraft";
 import TaskList from "./TaskList";
 import '../assets/styles/Dashboard.css';
 import GanttChart from './GanttChart';
 import TaskUpload from "./TaskUpload";
-import { selectTasksForGantt } from "../store/taskSelectors";
-import { fetchTasks } from '../store/taskSlice';
+import { selectAircraftsForGantt } from "../store/aircraftSelectors";
+import { fetchAircrafts } from '../store/aircraftSlice';
 
 const Dashboard = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('tasks');
-      const tasksForGantt = useSelector(selectTasksForGantt);
-    const tasks = useSelector((state) => state.tasks.tasks);
-    const [selectedTaskId, setSelectedTaskId] = useState(null);
-     const [selectedTask, setSelectedTask] = useState(null);
+    const [activeTab, setActiveTab] = useState('aircrafts');
+      const aircraftsForGantt = useSelector(selectAircraftsForGantt);
+    const aircrafts = useSelector((state) => state.aircrafts.aircrafts);
+    const [selectedAircraftId, setSelectedAircraftId] = useState(null);
+     const [selectedAircraft, setSelectedAircraft] = useState(null);
      const { token } = useSelector((state) => state.auth);
 
 
     useEffect(() => {
         if(token) {
-        dispatch(fetchTasks());
+        dispatch(fetchAircrafts());
       }
     }, [dispatch, token]);
 
@@ -32,18 +32,18 @@ const Dashboard = () => {
      navigate('/login');
     };
 
-    const handleSelectTask = (e) => {
-        const taskId = e.target.value;
-         setSelectedTaskId(taskId);
-       const selectedTask = tasks.find(task => task.id === parseInt(taskId));
-        setSelectedTask(selectedTask)
+    const handleSelectAircraft = (e) => {
+        const aircraftId = e.target.value;
+         setSelectedAircraftId(aircraftId);
+       const selectedAircraft = aircrafts.find(ac => ac.id === parseInt(aircraftId));
+        setSelectedAircraft(selectedAircraft)
      };
 
-    const handleTaskUploaded = () => {
-        dispatch(fetchTasks());
+    const handleAircraftUploaded = () => {
+        dispatch(fetchAircrafts());
     }
        if (!token) {
-        return <p>Please login</p>;
+        return <p>Пожалуйста, войдите в личный кабинет</p>;
     }
 
     return (
@@ -57,37 +57,37 @@ const Dashboard = () => {
             </div>
             <div className="dashboard-container">
                 <div className="dashboard-menu">
-                    <h3>Меню задач</h3>
-                    <CreateTask />
+                    <h3>Меню работ</h3>
+                    <CreateAircraft />
                     <div className='select-task-container'>
-                       <label htmlFor='taskSelect'>Выберите задачу:</label>
-                        <select name='taskSelect' id='taskSelect' onChange={handleSelectTask} value={selectedTaskId || ''}>
-                             <option value={''}>Выберите задачу</option>
-                              {tasks.map((task) => (
-                                  <option key={task.id} value={task.id}>{task.name}</option>
+                       <label htmlFor='taskSelect'>Выберите бортовой номер ВС:</label>
+                        <select name='taskSelect' id='taskSelect' onChange={handleSelectAircraft} value={selectedAircraftId || ''}>
+                             <option value={''}>Выберите бортовой номер ВС: </option>
+                              {aircrafts.map((ac) => (
+                                  <option key={ac.id} value={ac.id}>{ac.name}</option>
                              ))}
                         </select>
-                        {selectedTaskId && <TaskUpload taskId={selectedTaskId} onTaskUploaded={handleTaskUploaded}/>}
+                        {selectedAircraftId && <TaskUpload aircraftId={selectedAircraftId} onAircraftUploaded={handleAircraftUploaded}/>}
                     </div>
                 </div>
                 <div className="dashboard-content">
                     <div className="tab-buttons">
                         <button
-                            className={activeTab === 'tasks' ? 'active' : ''}
-                            onClick={() => setActiveTab('tasks')}
+                            className={activeTab === 'aircrafts' ? 'active' : ''}
+                            onClick={() => setActiveTab('aircrafts')}
                         >
-                            Задачи
+                            Перечень ВС
                         </button>
                         <button
                             className={activeTab === 'gantt' ? 'active' : ''}
                             onClick={() => setActiveTab('gantt')}
                         >
-                            Диаграмма Ганта
+                            График простоя ВС
                         </button>
                     </div>
                     <div className="tab-content">
-                        {activeTab === 'tasks' && <TaskList selectedTaskId={selectedTaskId} selectedTask={selectedTask} />}
-                        {activeTab === 'gantt' && <GanttChart tasks={tasksForGantt} />}
+                        {activeTab === 'aircrafts' && <TaskList selectedAircraftId={selectedAircraftId} selectedAircraft={selectedAircraft} />}
+                        {activeTab === 'gantt' && <GanttChart aircrafts={aircraftsForGantt} />}
                     </div>
                 </div>
             </div>

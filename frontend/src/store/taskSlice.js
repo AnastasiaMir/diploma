@@ -5,36 +5,31 @@ const API_URL = '/api/tasks';
 
 export const fetchTasks = createAsyncThunk(
     'tasks/fetchTasks',
-    async (_, { rejectWithValue }) => {
+    async (aircraftId, { rejectWithValue }) => {
         try {
-            const response = await api.get(`${API_URL}`);
-            return response.data;
+            const response = await api.get(`/api/aircrafts/${aircraftId}/tasks`);  
+            if (response.status >= 200 && response.status < 300) {
+                return response.data;
+            }
+            if (response.status === 404) {
+                console.log("No tasks found for this aircraft");
+                return []; 
+            }
+            throw new Error(`Failed to fetch tasks with status ${response.status}`);
         } catch (error) {
-            return rejectWithValue(error.response.data.message);
+            return rejectWithValue(error.message);
         }
     }
 );
 
-export const addTask = createAsyncThunk(
-    'tasks/addTask',
-    async (task, { rejectWithValue }) => {
+export const createTask = createAsyncThunk(
+    'tasks/createTask',
+    async (newTask, { rejectWithValue }) => {
         try {
-            const response = await api.post(`${API_URL}`, task);
+            const response = await api.post(`${API_URL}`, newTask);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data.message);
-        }
-    }
-);
-
-export const deleteTask = createAsyncThunk(
-    'tasks/deleteTask',
-    async (id, { rejectWithValue }) => {
-        try {
-            await api.delete(`${API_URL}/${id}`);
-            return id;
-        } catch (e) {
-            return rejectWithValue(e.response.data.message);
+            return rejectWithValue(error.response?.data?.message || 'Create task error');
         }
     }
 );
@@ -46,50 +41,43 @@ export const updateTask = createAsyncThunk(
             const response = await api.put(`${API_URL}/${id}`, updatedTask);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data.message);
+            return rejectWithValue(error.response?.data?.message || 'Update task error');
         }
     }
 );
 
-// Async thunk для добавления одной подзадачи
-export const addSubtask = createAsyncThunk(
-    'tasks/addSubtask',
-    async ({ taskId, subtaskData }, { rejectWithValue }) => {
+export const deleteTask = createAsyncThunk(
+    'tasks/deleteTask',
+    async (id, { rejectWithValue }) => {
         try {
-            const response = await api.post(`${API_URL}/${taskId}/subtasks`, subtaskData);
-            return { taskId, subtask: response.data };
-        } catch (error) {
-            return rejectWithValue(error.response.data.message);
+            await api.delete(`${API_URL}/${id}`);
+            return id;
+        }
+        catch (error) {
+            return rejectWithValue(error.response?.data?.message || 'Delete task error');
         }
     }
 );
 
-// Async thunk для добавления нескольких подзадач (bulk)
-export const addBulkSubtasks = createAsyncThunk(
-    'tasks/addBulkSubtasks',
-     async ({ taskId, subtasks }, { rejectWithValue }) => {
+export const addTasks = createAsyncThunk(
+    'tasks/addTasks',
+     async ({ aircraftId, tasks }, { rejectWithValue }) => {
         try {
-            await api.post(`${API_URL}/${taskId}/subtasks/bulk`, subtasks);
-            return { taskId, subtasks };
+            return { aircraftId, tasks }
         } catch (error) {
            return rejectWithValue(error.response.data.message);
        }
     }
 );
 
-
 const taskSlice = createSlice({
     name: 'tasks',
     initialState: {
-        tasks: [],
+        tasks: {},
         loading: false,
         error: null,
     },
-    reducers: {
-        clearError: (state) => {
-            state.error = null;
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchTasks.pending, (state) => {
@@ -98,38 +86,33 @@ const taskSlice = createSlice({
             })
             .addCase(fetchTasks.fulfilled, (state, action) => {
                 state.loading = false;
-                state.tasks = action.payload.map(task => ({
-                    ...task,
-                   subtasks: task.subtasks || [],
-                }));
+                state.tasks = action.payload.reduce((acc, task) => {
+                    if (!acc[task.aircraft_id]) {
+                        acc[task.aircraft_id] = []
+                    }
+                    acc[task.aircraft_id].push(task)
+                    return acc
+                }, {})
             })
             .addCase(fetchTasks.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
-            .addCase(addTask.pending, (state) => {
+            .addCase(createTask.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addTask.fulfilled, (state, action) => {
+            .addCase(createTask.fulfilled, (state, action) => {
                 state.loading = false;
-                state.tasks.push(action.payload);
+                const newTask = action.payload;
+                if (!state.tasks[newTask.aircraft_id]) {
+                    state.tasks[newTask.aircraft_id] = [];
+                }
+                state.tasks[newTask.aircraft_id].push(newTask);
             })
-            .addCase(addTask.rejected, (state, action) => {
+            .addCase(createTask.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
-            })
-            .addCase(deleteTask.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(deleteTask.fulfilled, (state, action) => {
-                state.loading = false;
-                state.tasks = state.tasks.filter(task => task.id !== action.payload);
-            })
-            .addCase(deleteTask.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload
             })
             .addCase(updateTask.pending, (state) => {
                 state.loading = true;
@@ -138,31 +121,41 @@ const taskSlice = createSlice({
             .addCase(updateTask.fulfilled, (state, action) => {
                 state.loading = false;
                 const updatedTask = action.payload;
-                const index = state.tasks.findIndex((task) => task.id === updatedTask.id);
-                if (index !== -1) {
-                    state.tasks[index] = updatedTask;
+                if (state.tasks[updatedTask.aircraft_id]) {
+                    const index = state.tasks[updatedTask.aircraft_id].findIndex((task) => task.id === updatedTask.id);
+                    if (index !== -1) {
+                        state.tasks[updatedTask.aircraft_id][index] = updatedTask;
+                    }
                 }
             })
             .addCase(updateTask.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
-              .addCase(addSubtask.fulfilled, (state, action) => {
-                const { taskId, subtask } = action.payload;
-                const taskIndex = state.tasks.findIndex(task => task.id === Number(taskId));
-                if(taskIndex !== -1) {
-                    state.tasks[taskIndex].subtasks = [...state.tasks[taskIndex].subtasks, subtask]
-                }
+             .addCase(deleteTask.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+             })
+            .addCase(deleteTask.fulfilled, (state, action) => {
+                state.loading = false;
+                const deletedTask = action.payload;
+                 Object.keys(state.tasks).forEach(key => {
+                    state.tasks[key] = state.tasks[key].filter(task => task.id !== deletedTask);
+                  });
             })
-            .addCase(addBulkSubtasks.fulfilled, (state, action) => {
-                 const { taskId, subtasks } = action.payload;
-                   const taskIndex = state.tasks.findIndex(task => task.id === Number(taskId));
-                    if (taskIndex !== -1) {
-                        state.tasks[taskIndex].subtasks = [...state.tasks[taskIndex].subtasks, ...subtasks]
-                     }
+            .addCase(deleteTask.rejected, (state, action) => {
+                 state.loading = false;
+                 state.error = action.payload;
+            })
+            .addCase(addTasks.fulfilled, (state, action) => {
+                state.loading = false;
+               const { aircraftId, tasks } = action.payload;
+                if (!state.tasks[aircraftId]) {
+                    state.tasks[aircraftId] = [];
+                }
+                  state.tasks[aircraftId] = [...state.tasks[aircraftId], ...tasks];
             });
     },
 });
 
-export const { clearError } = taskSlice.actions;
 export default taskSlice.reducer;

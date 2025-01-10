@@ -2,7 +2,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db-conn.js';
 
-const User = sequelize.define('user', {
+const User = sequelize.define('users', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -18,7 +18,7 @@ const User = sequelize.define('user', {
     allowNull: false,
   }
 }, {
-  timestamps: false,  // <--- Add this line to disable timestamps
+  timestamps: false, 
 });
 
 export default User;

@@ -1,3 +1,15 @@
+.btn-change {
+   padding: 5px; 
+   background-color: #ca1643;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 2px;
+}
 .task-list-container {
     width: 100%;
 }

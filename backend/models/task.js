@@ -1,9 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db-conn.js';
-import User from './user.js';
-import Subtask from './subtask.js';
 
-const Task = sequelize.define('task', {
+const Task = sequelize.define('tasks', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -13,15 +11,15 @@ const Task = sequelize.define('task', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  start_date: {
-    type: DataTypes.DATE,
+  manpower: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
-  finish_date: {
-    type: DataTypes.DATE,
+  completed: {
+    type: DataTypes.BOOLEAN,
     allowNull: false,
   },
-  user_id: {
+  aircraft_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
   }
@@ -29,11 +27,5 @@ const Task = sequelize.define('task', {
 {
   timestamps: false,
 });
-
-Task.belongsTo(User, { foreignKey: 'user_id' });
-User.hasMany(Task, { foreignKey: 'user_id' });
-
-Task.hasMany(Subtask, { foreignKey: 'task_id', as: 'subtasks', onDelete: 'CASCADE' });
-Subtask.belongsTo(Task, { foreignKey: 'task_id'});
 
 export default Task;

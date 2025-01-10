@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import taskRoutes from './routes/tasks.js';
-import subtaskRoutes from './routes/subtasks.js';
+import aircraftRoutes from './routes/aircrafts.js';
 
 dotenv.config({ path: '/home/anastasia/diploma/backend/.env' });
 
@@ -16,8 +16,8 @@ app.use(express.json());
 
 
 app.use('/api/auth', authRoutes);
+app.use('/api/aircrafts', aircraftRoutes);
 app.use('/api/tasks', taskRoutes);
-app.use('/api/subtasks', subtaskRoutes);
 
 
 app.listen(port, () => {
