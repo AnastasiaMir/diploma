@@ -1,15 +1,8 @@
-.btn-change {
-   padding: 5px; 
-   background-color: #ca1643;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 15px;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 2px;
+th:hover {
+    background-color: #dee2e6;
+    cursor: pointer;
 }
+
 .ac-list-container {
     width: 100%;
 }
@@ -38,7 +31,7 @@
     background-color: #f9f9f9;
 }
 .ac-table tbody tr:hover {
-   background-color: #f0f0f0
+    background-color: #f0f0f0;
 }
 
 .ac-row {
@@ -50,9 +43,20 @@
 .ac-row:hover {
     background-color: #e9ecef;
 }
-th:hover {
-    background-color: #dee2e6;
+.btn-change {
+    padding: 5px;
+    background-color: #ca1643;
+    color: white;
+    border: none;
     cursor: pointer;
+    border-radius: 4px;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 2px;
+}
+.btn-modal {
+    margin: 5px;
 }
 
 .completed {
@@ -65,23 +69,54 @@ th:hover {
     cursor: pointer;
     margin-left: 5px;
     font-size: 16px;
-     color: #6c757d;
-      transition: color 0.3s ease;
+    color: #6c757d;
+    transition: color 0.3s ease;
 }
 
 .edit-icon:hover,
 .delete-icon:hover {
- color: #343a40;
+    color: #343a40;
 }
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
 .task-row {
     background-color: #f0f0f0;
     border-left: 10px solid #ca1643;
 }
 .overdue {
     color: red;
-     font-weight: bold;
+    font-weight: bold;
 }
 .error-message {
-  color: red;
+    color: red;
     font-style: italic;
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+}
+.error-input {
+    border: 1px solid red;
 }

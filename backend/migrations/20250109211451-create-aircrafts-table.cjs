@@ -28,17 +28,17 @@ module.exports = {
                 type: Sequelize.DATE
             }
         });
-      // await queryInterface.addConstraint('aircrafts', {
-      //     fields: ['user_id'],
-      //     type: 'foreign key',
-      //     name: 'aircrafts_user_id_fkey',
-      //      references: {
-      //         table: 'users',
-      //         field: 'id'
-      //     },
-      //       onDelete: 'CASCADE',
-      //         onUpdate: 'CASCADE'
-      // })
+    //   await queryInterface.addConstraint('aircrafts', {
+    //       fields: ['user_id'],
+    //       type: 'foreign key',
+    //       name: 'aircrafts_user_id_fkey',
+    //        references: {
+    //           table: 'users',
+    //           field: 'id'
+    //       },
+    //         onDelete: 'CASCADE',
+    //           onUpdate: 'CASCADE'
+    //   })
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.dropTable('aircrafts');

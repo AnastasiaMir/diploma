@@ -133,6 +133,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     if (!aircraft) {
       return res.status(404).json({ message: 'Aircraft not found' });
     }
+    await Task.destroy({ where: { aircraft_id: id } });
     await aircraft.destroy();
     res.status(204).send();
   } catch (error) {

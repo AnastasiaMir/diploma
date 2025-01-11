@@ -29,17 +29,17 @@ module.exports = {
                 type: Sequelize.BOOLEAN
             }
         });
-      // await queryInterface.addConstraint('tasks', {
-      //     fields: ['aircraft_id'],
-      //     type: 'foreign key',
-      //     name: 'tasks_aircraft_id_fkey',
-      //      references: {
-      //         table: 'aircrafts',
-      //         field: 'id'
-      //     },
-      //      onDelete: 'CASCADE',
-      //         onUpdate: 'CASCADE'
-      // });
+    //   await queryInterface.addConstraint('tasks', {
+    //       fields: ['aircraft_id'],
+    //       type: 'foreign key',
+    //       name: 'tasks_aircraft_id_fkey',
+    //        references: {
+    //           table: 'aircrafts',
+    //           field: 'id'
+    //       },
+    //        onDelete: 'CASCADE',
+    //           onUpdate: 'CASCADE'
+    //   });
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.removeConstraint('tasks', 'tasks_aircraft_id_fkey')

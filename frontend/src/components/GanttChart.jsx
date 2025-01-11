@@ -262,7 +262,7 @@ const GanttChart = ({ aircrafts }) => {
   return (
     <div
       className="gantt-chart-container"
-      style={{ maxHeight: "calc(100vh - 220px)", overflow: "auto" }}
+      style={{overflowY: "auto" }} // maxHeight: "calc(100vh - 220px)", добавить если нижняя прокрутка нужна обязательно
       ref={ganttChartContainerRef}
     >
       <div className="aircraft-labels-container" ref={aircraftLabelsRef}></div>
