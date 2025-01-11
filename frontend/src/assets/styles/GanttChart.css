@@ -1,6 +1,5 @@
 .gantt-chart-container {
   display: flex;
-  overflow: hidden;
 }
 
 .aircraft-labels-container {
