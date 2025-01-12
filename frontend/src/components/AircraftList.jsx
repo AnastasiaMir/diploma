@@ -137,7 +137,7 @@ const AircraftList = () => {
             const newState = {...prevState};
              if (name === "name") {
                  if (!value || value.trim() === "") {
-                     newState.name = "Имя самолета не может быть пустым";
+                     newState.name = "Поле не может быть пустым";
                  } else {
                      delete newState.name;
                  }
@@ -164,7 +164,6 @@ const AircraftList = () => {
 
     const handleSaveAircraft = async (aircraft) => {
         if (Object.keys(editErrors).length > 0) {
-            // Если есть ошибки — не сохраняем
             return;
         }
         await dispatch(
@@ -176,6 +175,11 @@ const AircraftList = () => {
     const handleCancelEdit = () => {
         setEditAircraftId(null);
          setEditErrors({});
+    };
+    const handleKeyDown = (e, aircraft) => {
+        if (e.key === 'Enter') {
+            handleSaveAircraft(aircraft);
+        }
     };
 
     const sortedAircrafts = useMemo(() => {
@@ -257,6 +261,7 @@ const AircraftList = () => {
                                             value={editAircraft.name}
                                             onChange={handleEditAircraftChange}
                                             className={editErrors.name ? "error-input" : ""}
+                                            onKeyDown={(e) => handleKeyDown(e, ac)}
                                         />
                                         {editErrors.name && (
                                             <span className="error-message">{editErrors.name}</span>
@@ -287,6 +292,7 @@ const AircraftList = () => {
                                             ? editAircraft.start_date.split("T")[0]
                                             : ""
                                         }
+                                        onKeyDown={(e) => handleKeyDown(e, ac)}
                                          onChange={handleEditAircraftChange}
                                         className={editErrors.date ? "error-input" : ""}
                                     />
@@ -308,6 +314,7 @@ const AircraftList = () => {
                                             }
                                             onChange={handleEditAircraftChange}
                                             className={editErrors.date ? "error-input" : ""}
+                                            onKeyDown={(e) => handleKeyDown(e, ac)}
                                         />
                                         {editErrors.date && (
                                             <span className="error-message">{editErrors.date}</span>

@@ -23,6 +23,8 @@ const Dashboard = () => {
   useEffect(() => {
     if (token) {
       dispatch(fetchAircrafts());
+    } else {
+      navigate('/login');
     }
   }, [dispatch, token]);
 
@@ -103,8 +105,6 @@ const Dashboard = () => {
           <div className="tab-content">
             {activeTab === "aircrafts" && (
               <AircraftList
-                // selectedAircraftId={selectedAircraftId}
-                // selectedAircraft={selectedAircraft}
               />
             )}
             {activeTab === "gantt" && (
