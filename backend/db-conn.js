@@ -10,6 +10,10 @@ const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, pr
   dialect: "postgres",
 });
 
+// const sequelize = new Sequelize(process.env.DATABASE_URL, {
+//   dialect: 'postgres',
+// });
+
 const connectDB = async () => {
   try {
     await sequelize.authenticate();

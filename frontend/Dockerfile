@@ -1,19 +1,12 @@
-FROM node:20-alpine AS builder
-
+FROM node:18-alpine AS builder
 WORKDIR /app
-
 COPY package*.json ./
-
-RUN npm install --force
-
+RUN npm install
 COPY . .
+RUN npm run build
 
-RUN chown -R node:node /app/node_modules
-
-RUN rm -rf /app/node_modules/.vite
-
-USER node
-
-EXPOSE 5173
-
-CMD ["npm", "run", "dev"]
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+RUN chown -R nginx:nginx /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
