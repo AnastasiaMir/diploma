@@ -24,7 +24,7 @@ const Dashboard = () => {
     if (token) {
       dispatch(fetchAircrafts());
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   }, [dispatch, token]);
 
@@ -103,10 +103,7 @@ const Dashboard = () => {
             </button>
           </div>
           <div className="tab-content">
-            {activeTab === "aircrafts" && (
-              <AircraftList
-              />
-            )}
+            {activeTab === "aircrafts" && <AircraftList />}
             {activeTab === "gantt" && (
               <GanttChart aircrafts={aircraftsForGantt} />
             )}
