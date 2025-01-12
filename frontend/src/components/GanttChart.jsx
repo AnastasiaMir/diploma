@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useState, useCallback, useLayoutEffect} from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useLayoutEffect,
+} from "react";
 import "../assets/styles/GanttChart.css";
 
 const GanttChart = ({ aircrafts }) => {
@@ -10,9 +16,8 @@ const GanttChart = ({ aircrafts }) => {
   const drawChart = useCallback(() => {
     if (!svgRef.current || !aircrafts || aircrafts.length === 0) return;
 
-
     const chartData = {
-      svg: svgRef.current, 
+      svg: svgRef.current,
       container: svgRef.current.parentElement, // родительский контейнер диаграммы
       charWidth: 9, // ширина символа в строке (используется для вычисления ширины названий самолетов)
       maxAircraftNameLength: 0, // максимальная длина имени самолета (в пикселях)
@@ -36,26 +41,24 @@ const GanttChart = ({ aircrafts }) => {
     chartData.svg.innerHTML = "";
 
     aircrafts.forEach((ac) => {
-
       chartData.maxAircraftNameLength = Math.max(
-        chartData.maxAircraftNameLength, 
-        ac.name.length * chartData.charWidth 
+        chartData.maxAircraftNameLength,
+        ac.name.length * chartData.charWidth
       );
     });
 
     chartData.aircraftNameWidth = Math.max(
       120, // минимальная ширина контейнера
-      chartData.maxAircraftNameLength 
+      chartData.maxAircraftNameLength
     );
 
     chartData.availableWidth = chartData.container.offsetWidth;
     setContainerWidth(chartData.availableWidth);
 
     aircrafts.forEach((ac) => {
-     
       const acStart = new Date(ac.start);
       const acEnd = new Date(ac.end);
-   
+
       chartData.minDate =
         acStart < chartData.minDate ? acStart : chartData.minDate;
 
@@ -64,17 +67,16 @@ const GanttChart = ({ aircrafts }) => {
 
     chartData.currentDate = new Date(chartData.minDate);
 
- 
     const drawMonthHeader = (
-      date, 
-      startX, 
-      endX,  
-      oneDayWidth, 
-      dateHeaderHeight, 
-      svg 
+      date,
+      startX,
+      endX,
+      oneDayWidth,
+      dateHeaderHeight,
+      svg
     ) => {
-      const x = startX * oneDayWidth; 
-      const width = (endX - startX + 1) * oneDayWidth; 
+      const x = startX * oneDayWidth;
+      const width = (endX - startX + 1) * oneDayWidth;
       const month = date.toLocaleString("default", { month: "long" });
       const year = date.getFullYear();
 
@@ -85,13 +87,12 @@ const GanttChart = ({ aircrafts }) => {
       monthHeader.textContent = `${month} ${year}`.toUpperCase();
       monthHeader.setAttribute("x", x + width / 2);
       monthHeader.setAttribute("y", 10);
-  
+
       monthHeader.setAttribute("font-size", "14px");
       monthHeader.setAttribute("font-weight", "bold");
       svg.appendChild(monthHeader);
     };
 
-    
     const drawMonthAndDates = (date, index) => {
       const x = index * chartData.oneDayWidth;
       if (date.toDateString() === chartData.today.toDateString()) {
@@ -120,34 +121,36 @@ const GanttChart = ({ aircrafts }) => {
       divider.setAttribute("stroke", "#ddd");
       divider.setAttribute("stroke-width", "1");
       chartData.svg.appendChild(divider);
-      chartData.totalDays+=1;
+      chartData.totalDays += 1;
     };
 
     while (chartData.currentDate <= chartData.maxDate) {
-      const month = chartData.currentDate.toLocaleString("default", { month: "long" });
+      const month = chartData.currentDate.toLocaleString("default", {
+        month: "long",
+      });
       if (month !== chartData.currentMonth) {
-         if (chartData.currentMonth !== null) {
-             drawMonthHeader(
-                 new Date(
-                    chartData.currentDate.getFullYear(),
-                    chartData.currentDate.getMonth() - 1,
-                    1
-                  ),
-                  chartData.monthStartX,
-                  chartData.i - 1,
-                  chartData.oneDayWidth,
-                  chartData.dateHeaderHeight,
-                  chartData.svg
-              );
-          }
-          chartData.currentMonth = month;
-          chartData.monthStartX = chartData.i;
+        if (chartData.currentMonth !== null) {
+          drawMonthHeader(
+            new Date(
+              chartData.currentDate.getFullYear(),
+              chartData.currentDate.getMonth() - 1,
+              1
+            ),
+            chartData.monthStartX,
+            chartData.i - 1,
+            chartData.oneDayWidth,
+            chartData.dateHeaderHeight,
+            chartData.svg
+          );
+        }
+        chartData.currentMonth = month;
+        chartData.monthStartX = chartData.i;
       }
-        drawMonthAndDates(new Date(chartData.currentDate), chartData.i);
-        chartData.currentDate.setDate(chartData.currentDate.getDate() + 1);
-        chartData.i +=1;
-        if (chartData.i > 365) break;
-      }
+      drawMonthAndDates(new Date(chartData.currentDate), chartData.i);
+      chartData.currentDate.setDate(chartData.currentDate.getDate() + 1);
+      chartData.i += 1;
+      if (chartData.i > 365) break;
+    }
 
     aircrafts.forEach((ac, index) => {
       const start = new Date(ac.start);
@@ -156,7 +159,8 @@ const GanttChart = ({ aircrafts }) => {
       const aircraftStartDays = Math.floor(
         (start - chartData.minDate) / (1000 * 60 * 60 * 24) // дни от начала диаграммы до старта простоя
       );
-      const aircraftDurationDays = Math.floor( //длительность бара пррстоя 
+      const aircraftDurationDays = Math.floor(
+        //длительность бара пррстоя
         (end - start) / (1000 * 60 * 60 * 24)
       );
 
@@ -195,7 +199,6 @@ const GanttChart = ({ aircrafts }) => {
       chartData.svg.appendChild(progressBar);
     });
 
-
     if (chartData.todayX !== null) {
       const todayColumn = document.createElementNS(
         "http://www.w3.org/2000/svg",
@@ -208,7 +211,7 @@ const GanttChart = ({ aircrafts }) => {
         "height",
         chartData.container.offsetHeight - chartData.dateHeaderHeight
       );
-      todayColumn.setAttribute("fill", "rgba(230, 64, 52, 0.1)");
+      todayColumn.setAttribute("fill", "rgba(93, 118, 203, 0.1)");
       chartData.svg.insertBefore(todayColumn, chartData.svg.firstChild);
     }
     chartData.svg.setAttribute(
@@ -242,14 +245,11 @@ const GanttChart = ({ aircrafts }) => {
         aircraftLabelsRef.current.appendChild(aircraftNameDiv);
       });
     }
-    
   }, [aircrafts]);
 
   useEffect(() => {
     drawChart();
   }, [aircrafts, drawChart]);
-  
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -262,11 +262,11 @@ const GanttChart = ({ aircrafts }) => {
   return (
     <div
       className="gantt-chart-container"
-      style={{overflowY: "auto" }} // maxHeight: "calc(100vh - 220px)", добавить если нижняя прокрутка нужна обязательно
+      style={{ overflowY: "auto" }} // maxHeight: "calc(100vh - 220px)", добавить если нижняя прокрутка нужна обязательно
       ref={ganttChartContainerRef}
     >
       <div className="aircraft-labels-container" ref={aircraftLabelsRef}></div>
-      <div className="gantt-chart-svg-wrapper" >
+      <div className="gantt-chart-svg-wrapper">
         <svg ref={svgRef} className="gantt-svg" />
       </div>
     </div>
