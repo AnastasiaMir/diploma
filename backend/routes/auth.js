@@ -29,7 +29,7 @@ router.post(
 
       const newUser = await User.create({ username, password: hashedPassword });
       const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
+        // expiresIn: '1h',
       });
 
       res.status(201).json({
