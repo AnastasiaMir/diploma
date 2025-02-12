@@ -218,7 +218,7 @@ const AircraftList = () => {
 
   return (
     <div className="ac-list-container">
-      {error && <p className="error-message">Error: {error}</p>}
+      {/* {error && <p className="error-message">Error: {error}</p>} */}
       {loading && <p>Loading</p>}
       {showModal && (
         <div className="modal">

@@ -21,12 +21,23 @@ const Dashboard = () => {
   const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     if (token) {
-      dispatch(fetchAircrafts());
+      dispatch(fetchAircrafts({ signal }));
     } else {
       navigate("/login");
     }
-  }, [dispatch, token]);
+    return () => controller.abort();
+  }, [dispatch, navigate, token]);
+
+  // useEffect(() => {
+  //   if (token) {
+  //     dispatch(fetchAircrafts());
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, [dispatch, token]);
 
   const handleLogout = () => {
     dispatch(logout());
