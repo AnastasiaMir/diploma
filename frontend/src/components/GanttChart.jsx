@@ -1,9 +1,8 @@
-import React, {
+import {
   useRef,
   useEffect,
   useState,
-  useCallback,
-  useLayoutEffect,
+  useCallback
 } from "react";
 import "../assets/styles/GanttChart.css";
 
