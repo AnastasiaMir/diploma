@@ -17,4 +17,4 @@ COPY ./migrations /app/migrations
 COPY . .
 
 # Запускаем миграции перед запуском бэкенда
-CMD sh -c "npx sequelize-cli db:migrate --url postgresql://postgres:1234@db:5432/db && npm start"
+CMD sh -c `npx sequelize-cli db:migrate --url postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE} && npm start`
