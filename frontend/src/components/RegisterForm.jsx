@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../store/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../assets/styles/Auth.css';
 
 const RegisterForm = () => {
@@ -71,7 +71,13 @@ const RegisterForm = () => {
                 <button type="submit" disabled={loading} className="btn">
                     Зарегистрироваться
                 </button>
+                <div className="link-container">
+                <p>
+                 <Link to="/login">Авторизоваться</Link>
+                  </p>
+            </div>
             </form>
+            
         </div>
     );
 };

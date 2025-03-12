@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../api';
 
-const AUTH_URL = '/api/auth';
+const AUTH_URL = '/auth';
 
 export const loginUser = createAsyncThunk(
-  '/api/auth/login',
+  '/auth/login',
    async (credentials, { rejectWithValue }) => {
     try {
         const response = await api.post(`${AUTH_URL}/login`, credentials);
@@ -18,7 +18,7 @@ export const loginUser = createAsyncThunk(
 );
 
 export const registerUser = createAsyncThunk(
-    '/api/auth/register',
+    '/auth/register',
       async(userData, { rejectWithValue }) => {
            try {
               const response = await api.post(`${AUTH_URL}/register`, userData);

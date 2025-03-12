@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../api';
 
-const API_URL = '/api/tasks';
+const API_URL = '/tasks';
 
 export const fetchTasks = createAsyncThunk(
     'tasks/fetchTasks',
     async (aircraftId, { rejectWithValue }) => {
         try {
-            const response = await api.get(`/api/aircrafts/${aircraftId}/tasks`);  
+            const response = await api.get(`/aircrafts/${aircraftId}/tasks`);  
             if (response.status >= 200 && response.status < 300) {
                 return response.data;
             }

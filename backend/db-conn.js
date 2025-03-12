@@ -1,18 +1,14 @@
 import { Sequelize } from 'sequelize';
 import * as dotenv from 'dotenv';
 
-dotenv.config({ path: '/home/anastasia/diploma/backend/.env' });
-// dotenv.config();
+// dotenv.config({ path: '/home/anastasia/diploma/backend/.env' });
+dotenv.config();
 
 const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASSWORD,{
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   dialect: "postgres",
 });
-
-// const sequelize = new Sequelize(process.env.DATABASE_URL, {
-//   dialect: 'postgres',
-// });
 
 const connectDB = async () => {
   try {
@@ -24,3 +20,5 @@ const connectDB = async () => {
 };
 connectDB();
 export default sequelize;
+
+

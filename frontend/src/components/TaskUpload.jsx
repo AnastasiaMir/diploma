@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import api from '../api';
 import { useDispatch } from 'react-redux';
@@ -32,7 +32,7 @@ const TaskUpload = ({ aircraftId }) => {
                 completed: false
             }));
              for(const task of transformedTasks) {
-               await  api.post(`/api/aircrafts/${aircraftId}/tasks`, task)
+               await  api.post(`/aircrafts/${aircraftId}/tasks`, task)
             }
             setUploadStatus({ message: 'Работы добавлены', success: true });
              dispatch(fetchAircrafts());

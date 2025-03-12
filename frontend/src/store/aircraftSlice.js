@@ -1,19 +1,44 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../api';
 
-const API_URL = '/api/aircrafts';
+const API_URL = '/aircrafts';
+
+// export const fetchAircrafts = createAsyncThunk(
+//     'aircrafts/fetchAircrafts',
+//     async (_, { rejectWithValue }) => {
+//         try {
+//             const response = await api.get(`${API_URL}`);
+//             return response.data;
+//         } catch (error) {
+//             return rejectWithValue(error.response.data.message);
+//         }
+//     }
+// );
 
 export const fetchAircrafts = createAsyncThunk(
-    'aircrafts/fetchAircrafts',
-    async (_, { rejectWithValue }) => {
-        try {
-            const response = await api.get(`${API_URL}`);
-            return response.data;
-        } catch (error) {
-            return rejectWithValue(error.response.data.message);
+    "aircrafts/fetchAircrafts",
+    async (_, { rejectWithValue, signal }) => { 
+      try {
+        const response = await api.get(`${API_URL}`, { signal }); 
+        return response.data;
+      } catch (error) {
+        let message = "Произошла ошибка при загрузке данных.";
+        if (error.response) {
+          if (error.response.data && error.response.data.message) {
+            message = error.response.data.message;
+          } else if (error.response.status) {
+            message = `Ошибка сервера: ${error.response.status}`;
+          }
+        } else if (error.name === 'AbortError') {
+          message = 'Запрос отменен';
+          return null; 
+        } else if (error.message) {
+          message = error.message; 
         }
+        return rejectWithValue(message); 
+      }
     }
-);
+  );
 
 export const addAircraft = createAsyncThunk(
     'aircrafts/addAircraft',
