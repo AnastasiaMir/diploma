@@ -24,6 +24,7 @@ export const authenticateToken = async (req, res, next) => {
     console.error('Error during authorization:', error);
     if (error instanceof jwt.TokenExpiredError) {
       return res.status(401).json({ message: 'Unauthorized: Token Expired', error: error.message }); 
+
     } else if (error instanceof jwt.JsonWebTokenError) {
       return res.status(401).json({ message: 'Unauthorized: Invalid Token', error: error.message }); 
     }

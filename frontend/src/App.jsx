@@ -11,16 +11,7 @@ const App = () => {
 
     const { token } = useSelector((state) => state.auth);
     console.log(token)
-    // const [isTokenChecked, setIsTokenChecked] = useState(false); 
-
-    // useEffect(() => {
-    //     setIsTokenChecked(true);
-    // }, []);
-
-    // if (!isTokenChecked) {
-    //     return <div>Loading...</div>;
-    // }
-
+    
     return (
         <BrowserRouter>
             <Routes>
