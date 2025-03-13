@@ -1,56 +1,3 @@
-# version: "3.9"
-
-# services:
-#   db:
-#     image: postgres:15-alpine
-#     container_name: db
-#     restart: always
-#     ports:
-#       - "5432:5432"
-#     environment:
-#       POSTGRES_USER: '${DB_USER}'
-#       POSTGRES_PASSWORD: '${DB_PASSWORD}'
-#       POSTGRES_DB: '${DB_DATABASE}'
-#     volumes:
-#       - db_data:/var/lib/postgresql/data
-
-#   backend:
-#     build: ./backend
-#     container_name: backend
-#     ports:
-#       - "3000:3000"  # Порт для доступа к API с хоста
-#     depends_on:
-#       - db
-#     environment:
-#       DB_DATABASE: '${DB_DATABASE}'
-#       DB_USER: '${DB_USER}'
-#       DB_PASSWORD: '${DB_PASSWORD}'
-#       DB_HOST: '${DB_HOST}'
-#       DB_PORT: '${DB_PORT}'
-#       NODE_ENV: production
-#     volumes:
-#       - backend_data:/app/node_modules
-#       - ./backend:/app
-
-#   frontend:
-#     build: ./frontend
-#     container_name: frontend
-#     ports:
-#       - "80:80"  # Порт для доступа к frontend с хоста (HTTP)
-#       # - "443:443"  # HTTPS
-#     depends_on:
-#       - backend
-#     volumes:
-#       - frontend_data:/app/node_modules
-#       - ./frontend:/app
-#       # - certs:/etc/letsencrypt 
-
-# volumes:
-#   db_data:
-#   backend_data:
-#   frontend_data:
-#   certs: 
-
 version: "3.9"
 
 services:
@@ -58,6 +5,8 @@ services:
     image: postgres:15-alpine
     container_name: db
     restart: always
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: '${DB_USER}'
       POSTGRES_PASSWORD: '${DB_PASSWORD}'
@@ -76,8 +25,8 @@ services:
       DB_DATABASE: '${DB_DATABASE}'
       DB_USER: '${DB_USER}'
       DB_PASSWORD: '${DB_PASSWORD}'
-      DB_HOST: 'db' # Используем имя сервиса db, если они в одной сети
-      DB_PORT: 5432
+      DB_HOST: '${DB_HOST}'
+      DB_PORT: '${DB_PORT}'
       NODE_ENV: production
     volumes:
       - backend_data:/app/node_modules
@@ -87,15 +36,66 @@ services:
     build: ./frontend
     container_name: frontend
     ports:
-      - "5173:5173" # удалите в production
+      - "80:80"  # Порт для доступа к frontend с хоста (HTTP)
+      # - "443:443"  # HTTPS
     depends_on:
       - backend
     volumes:
       - frontend_data:/app/node_modules
       - ./frontend:/app
-      # - certs:/etc/letsencrypt # больше не нужен
+      # - certs:/etc/letsencrypt 
 
 volumes:
   db_data:
   backend_data:
   frontend_data:
+  certs: 
+
+# version: "3.9"
+
+# services:
+#   db:
+#     image: postgres:15-alpine
+#     container_name: db
+#     restart: always
+#     environment:
+#       POSTGRES_USER: '${DB_USER}'
+#       POSTGRES_PASSWORD: '${DB_PASSWORD}'
+#       POSTGRES_DB: '${DB_DATABASE}'
+#     volumes:
+#       - db_data:/var/lib/postgresql/data
+
+#   backend:
+#     build: ./backend
+#     container_name: backend
+#     ports:
+#       - "3000:3000"  # Порт для доступа к API с хоста
+#     depends_on:
+#       - db
+#     environment:
+#       DB_DATABASE: '${DB_DATABASE}'
+#       DB_USER: '${DB_USER}'
+#       DB_PASSWORD: '${DB_PASSWORD}'
+#       DB_HOST: 'db' # Используем имя сервиса db, если они в одной сети
+#       DB_PORT: 5432
+#       NODE_ENV: production
+#     volumes:
+#       - backend_data:/app/node_modules
+#       - ./backend:/app
+
+#   frontend:
+#     build: ./frontend
+#     container_name: frontend
+#     ports:
+#       - "5173:5173" # удалите в production
+#     depends_on:
+#       - backend
+#     volumes:
+#       - frontend_data:/app/node_modules
+#       - ./frontend:/app
+#       # - certs:/etc/letsencrypt # больше не нужен
+
+# volumes:
+#   db_data:
+#   backend_data:
+#   frontend_data:

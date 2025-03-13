@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addAircraft } from "../store/aircraftSlice";
+import { useNavigate } from "react-router-dom";
 import "../assets/styles/CreateAircraft.css";
 
 const CreateAircraft = () => {
@@ -10,14 +11,16 @@ const CreateAircraft = () => {
   const [dateError, setDateError] = useState("");
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.aircrafts);
+  const navigate = useNavigate();
 
 
   //Под вопросом!!!!!!!!!!!!
   useEffect(() => {
     if (error) {
+      console.log(1)
       navigate("/login");
     } 
-  }, []);
+  }, [error]);
 
 
   const handleSubmit = async (e) => {

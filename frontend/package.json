@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "printenv": "env",
     "build": "vite build",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
