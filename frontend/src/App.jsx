@@ -1,5 +1,6 @@
 
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import React, { useEffect } from "react";
 import LoginForm from './components/LoginForm.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import NotFoundPage from './components/NotFoundPage.jsx';
@@ -7,10 +8,19 @@ import { useSelector } from 'react-redux';
 import RegisterForm from "./components/RegisterForm.jsx";
 import './assets/styles/global.css';
 
+
 const App = () => {
 
+    const { loading, error } = useSelector((state) => state.aircrafts);
+
+
+  useEffect(() => {
+    if (error) {
+      token=false;
+    } 
+  }, [token]);
+
     const { token } = useSelector((state) => state.auth);
-    console.log(token)
     
     return (
         <BrowserRouter>

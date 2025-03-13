@@ -17,10 +17,11 @@ const CreateAircraft = () => {
   //Под вопросом!!!!!!!!!!!!
   useEffect(() => {
     if (error) {
-      console.log(1)
+      console.log(error.message)
       navigate("/login");
+      console.log(1)
     } 
-  }, [error]);
+  }, [error, navigate]);
 
 
   const handleSubmit = async (e) => {
