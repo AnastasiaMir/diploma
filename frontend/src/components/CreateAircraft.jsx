@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addAircraft } from "../store/aircraftSlice";
 import "../assets/styles/CreateAircraft.css";
@@ -10,6 +10,15 @@ const CreateAircraft = () => {
   const [dateError, setDateError] = useState("");
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.aircrafts);
+
+
+  //Под вопросом!!!!!!!!!!!!
+  useEffect(() => {
+    if (error) {
+      navigate("/login");
+    } 
+  }, []);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
